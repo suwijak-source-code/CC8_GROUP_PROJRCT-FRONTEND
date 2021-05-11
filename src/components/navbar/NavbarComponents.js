@@ -1,12 +1,11 @@
-
-
-
 const NavbarComponents = () => {
-    return (
-        <div>
+  return (
+    <>
+      <div>
+        <h1>hello world</h1>
+      </div>
+    </>
+  );
+};
 
-        </div>
-    )
-}
-
-export default NavbarComponents
+export default NavbarComponents;
