@@ -1,8 +1,10 @@
+import "./navbar.css";
+
 const NavbarComponents = () => {
   return (
     <>
-      <div>
-        <h1>hello world</h1>
+      <div className="navbar-main">
+        <h1>PLANT MANAGER</h1>
       </div>
     </>
   );
