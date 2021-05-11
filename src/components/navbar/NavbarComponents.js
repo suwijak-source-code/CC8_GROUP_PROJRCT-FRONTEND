@@ -5,6 +5,8 @@ const NavbarComponents = () => {
     <>
       <div className="navbar-main">
         <h1>PLANT MANAGER</h1>
+        <br />
+        <h3>Welcome ADMIN</h3>
       </div>
     </>
   );
