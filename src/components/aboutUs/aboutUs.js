@@ -4,7 +4,7 @@ import { Box, Flex } from "@chakra-ui/react";
 function aboutUs() {
   return (
     <>
-      <Box bgColor="tomato" w="100%" p="40px" mt="50px">
+      <Box w="100%" p="40px" mt="50px">
         <Box border="2px" p="30px" bgColor="white">
           <Box>
             <h2>ABOUT US</h2>
