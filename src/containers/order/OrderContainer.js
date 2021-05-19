@@ -54,6 +54,17 @@ function OrderContainer() {
             >
               + รายการขาย
             </Button>
+            <Button
+              size="xs"
+              variant="outline"
+              bg="muted.300"
+              mx={2}
+              onClick={() => {
+                history.push("/inventory");
+              }}
+            >
+              ไปหน้าสินค้า
+            </Button>
           </Flex>
         </Container>
         <Container
