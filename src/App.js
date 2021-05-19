@@ -8,8 +8,6 @@ import AddEmployee from "./components/adminPageComponent/employeesManagement/add
 import EditEmployee from "./components/adminPageComponent/employeesManagement/EditEmployee/EditEmployeeComponent";
 import WorkPlanManagement from "./containers/adminPageContainer/workPlanManagement/WorkPlanManagement";
 import GardenerJob from "./containers/gardenerPageContainer/gardenerJob/GardenerJob";
-import FooterContainer from "./containers/footer/FooterContainer";
-import NavbarContainer from "./containers/navbar/NavbarContainer";
 import CreateOrderContainer from "./containers/order/CreateOrderContainer";
 import InventoryContainer from "./containers/inventory/InventoryContainer";
 import OrderContainer from "./containers/order/OrderContainer";
