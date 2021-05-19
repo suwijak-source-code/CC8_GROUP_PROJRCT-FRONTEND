@@ -1,4 +1,13 @@
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import { useSelector } from "react-redux";
+import FooterContainer from "./containers/footer/FooterContainer";
+import NavbarContainer from "./containers/navbar/NavbarContainer";
+import ProcessManagement from "./containers/adminPageContainer/processManagement/ProcessManagement";
+import EmployeesManagement from "./containers/adminPageContainer/employeesManagement/EmployeesManagement";
+import AddEmployee from "./components/adminPageComponent/employeesManagement/addEmployee/AddEmployeeComponent";
+import EditEmployee from "./components/adminPageComponent/employeesManagement/EditEmployee/EditEmployeeComponent";
+import WorkPlanManagement from "./containers/adminPageContainer/workPlanManagement/WorkPlanManagement";
+import GardenerJob from "./containers/gardenerPageContainer/gardenerJob/GardenerJob";
 import FooterContainer from "./containers/footer/FooterContainer";
 import NavbarContainer from "./containers/navbar/NavbarContainer";
 import CreateOrderContainer from "./containers/order/CreateOrderContainer";
@@ -12,41 +21,138 @@ import InventoryMovement from "./containers/inventory/InventoryMovement";
 import HomeContainer from "./containers/home/home";
 import AboutUsContainer from "./containers/aboutUs/aboutUs";
 
+const privateAdminRoutes = [
+  {
+    path: '/process-management',
+    component: ProcessManagement
+  },
+  {
+    path: '/employees-management',
+    component: EmployeesManagement
+  },
+  {
+    path: '/add-employees',
+    component: AddEmployee
+  },
+  {
+    path: '/edit-employees',
+    component: EditEmployee
+  },
+  {
+    path: '/work-plan-management',
+    component: WorkPlanManagement
+  },
+  {
+    path: '/order',
+    component: OrderContainer
+  },
+  {
+    path: '/order/create',
+    component: CreateOrderContainer
+  },
+  {
+    path: '/order/edit/:id',
+    component: EditOrderContainer
+  },
+  {
+    path: '/order/:id',
+    component: SingleOrderContainer
+  },
+  {
+    path: '/inventory',
+    component: InventoryContainer
+  },
+  {
+    path: '/movement',
+    component: InventoryMovement
+  },
+  {
+    path: '/movement/:id',
+    component: InventoryMovement
+  },
+  {
+    path: '/product/edit/:id',
+    component: EditProductContainer
+  },
+  {
+    path: '/product/create',
+    component: CreateProductContainer
+  },
+];
+
+const privateGardenerRoutes = [
+  {
+    path: '/gardener-job',
+    component: GardenerJob
+  },
+
+];
+
+const privateSalesRoutes = [
+  {
+    path: '/order',
+    component: OrderContainer
+  },
+  {
+    path: '/order/create',
+    component: CreateOrderContainer
+  },
+  {
+    path: '/order/edit/:id',
+    component: EditOrderContainer
+  },
+  {
+    path: '/order/:id',
+    component: SingleOrderContainer
+  },
+  {
+    path: '/inventory',
+    component: InventoryContainer
+  },
+  {
+    path: '/movement',
+    component: InventoryMovement
+  },
+  {
+    path: '/movement/:id',
+    component: InventoryMovement
+  },
+  {
+    path: '/product/edit/:id',
+    component: EditProductContainer
+  },
+  {
+    path: '/product/create',
+    component: CreateProductContainer
+  },
+];
+
+const publicRoutes = [
+  {
+    path: '/',
+    component: HomeContainer
+  },
+  {
+    path: '/about-us',
+    component: AboutUsContainer
+  }
+];
+
+
 function App() {
+  const isAuthenticated = useSelector((state) => state.authenticated.isAuthenticated);
+  const role = useSelector((state) => state.authenticated.role);
+
   return (
     <BrowserRouter>
       <div>
         <NavbarContainer />
         <div>
           <Switch>
-            <Route exact path="/" />
-            <Route exact path="/order" component={OrderContainer} />
-            <Route
-              exact
-              path="/order/create"
-              component={CreateOrderContainer}
-            />
-            <Route
-              exact
-              path="/order/edit/:id"
-              component={EditOrderContainer}
-            />
-            <Route exact path="/order/:id" component={SingleOrderContainer} />
-            <Route exact path="/inventory" component={InventoryContainer} />
-            <Route exact path="/movement" component={InventoryMovement} />
-            <Route exact path="/movement/:id" component={InventoryMovement} />
-            <Route
-              exact
-              path="/product/edit/:id"
-              component={EditProductContainer}
-            />
-            <Route
-              exact
-              path="/product/create"
-              component={CreateProductContainer}
-            />
-            <Route exact path="/" component={HomeContainer} />
-            <Route exact path="/aboutus" component={AboutUsContainer} />
+            {isAuthenticated && role === 'admin' && privateAdminRoutes.map((el, index) => <Route key={index} exact path={el.path} component={el.component} />)}
+            {isAuthenticated && role === 'gardener' && privateGardenerRoutes.map((el, index) => <Route key={index} exact path={el.path} component={el.component} />)}
+            {isAuthenticated && role === 'sales' && privateSalesRoutes.map((el, index) => <Route key={index} exact path={el.path} component={el.component} />)}
+            {!isAuthenticated && publicRoutes.map((el, index) => <Route key={index} exact path={el.path} component={el.component} />)}
           </Switch>
         </div>
         <FooterContainer />

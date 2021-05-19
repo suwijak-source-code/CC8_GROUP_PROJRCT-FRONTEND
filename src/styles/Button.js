@@ -3,6 +3,11 @@ const Button = {
         fontWeight: "400",
     },
     sizes: {
+        xs: {
+            minWidth: "30px",
+            fontSize: "sm",
+            padding: "4",
+        },
         sm: {
             minWidth: "150px",
             fontSize: "sm",
