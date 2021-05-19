@@ -1,15 +1,11 @@
-import FooterComponent from "../../components/footer/FooterComponent"
-
-
-
-
+import FooterComponent from "../../components/footer/FooterComponent";
 
 const FooterContainer = () => {
-    return (
-        <div>
-            <FooterComponent />
-        </div>
-    )
-}
+  return (
+    <div>
+      <FooterComponent />
+    </div>
+  );
+};
 
 export default FooterContainer;
