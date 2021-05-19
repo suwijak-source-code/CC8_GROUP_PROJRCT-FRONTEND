@@ -9,6 +9,8 @@ import EditOrderContainer from "./containers/order/EditOrderContainer";
 import EditProductContainer from "./containers/inventory/EditProductContainer";
 import CreateProductContainer from "./containers/inventory/CreateProductContainer";
 import InventoryMovement from "./containers/inventory/InventoryMovement";
+import HomeContainer from "./containers/home/home";
+import AboutUsContainer from "./containers/aboutUs/aboutUs";
 
 function App() {
   return (
@@ -43,6 +45,8 @@ function App() {
               path="/product/create"
               component={CreateProductContainer}
             />
+            <Route exact path="/" component={HomeContainer} />
+            <Route exact path="/aboutus" component={AboutUsContainer} />
           </Switch>
         </div>
         <FooterContainer />
