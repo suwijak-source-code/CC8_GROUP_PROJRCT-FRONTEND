@@ -4,14 +4,18 @@ import profileReducer from "../features/Profile/ProfileSlice";
 import paginateReducer from "../features/Paginate/PaginateSlice";
 import processManagementReducer from "../features/ProcessManagement/ProcessManagementSlice";
 import workPlanManagementReducer from "../features/WorkPlanManagement/WorkPlanManagementSlice";
-
+import orderListsReducer from "../features/Order/OrderListsSlice";
+import productReducer from "../features/Product/ProductsSlice";
 
 export default configureStore({
-    reducer: {
-        authenticated: authenticatedReducer,
-        profile: profileReducer,
-        paginate: paginateReducer,
-        processManagement: processManagementReducer,
-        workPlanManagement: workPlanManagementReducer,
-    }
+  reducer: {
+    authenticated: authenticatedReducer,
+    profile: profileReducer,
+    paginate: paginateReducer,
+    processManagement: processManagementReducer,
+    workPlanManagement: workPlanManagementReducer,
+    orderLists: orderListsReducer,
+    products: productReducer,
+  }
 });
+

@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { useSelector } from "react-redux";
 import FooterContainer from "./containers/footer/FooterContainer";
 import NavbarContainer from "./containers/navbar/NavbarContainer";
@@ -8,6 +8,18 @@ import AddEmployee from "./components/adminPageComponent/employeesManagement/add
 import EditEmployee from "./components/adminPageComponent/employeesManagement/EditEmployee/EditEmployeeComponent";
 import WorkPlanManagement from "./containers/adminPageContainer/workPlanManagement/WorkPlanManagement";
 import GardenerJob from "./containers/gardenerPageContainer/gardenerJob/GardenerJob";
+import FooterContainer from "./containers/footer/FooterContainer";
+import NavbarContainer from "./containers/navbar/NavbarContainer";
+import CreateOrderContainer from "./containers/order/CreateOrderContainer";
+import InventoryContainer from "./containers/inventory/InventoryContainer";
+import OrderContainer from "./containers/order/OrderContainer";
+import SingleOrderContainer from "./containers/order/SingleOrderContainer";
+import EditOrderContainer from "./containers/order/EditOrderContainer";
+import EditProductContainer from "./containers/inventory/EditProductContainer";
+import CreateProductContainer from "./containers/inventory/CreateProductContainer";
+import InventoryMovement from "./containers/inventory/InventoryMovement";
+import HomeContainer from "./containers/home/home";
+import AboutUsContainer from "./containers/aboutUs/aboutUs";
 
 const privateAdminRoutes = [
   {
@@ -29,23 +41,103 @@ const privateAdminRoutes = [
   {
     path: '/work-plan-management',
     component: WorkPlanManagement
-  }
+  },
+  {
+    path: '/order',
+    component: OrderContainer
+  },
+  {
+    path: '/order/create',
+    component: CreateOrderContainer
+  },
+  {
+    path: '/order/edit/:id',
+    component: EditOrderContainer
+  },
+  {
+    path: '/order/:id',
+    component: SingleOrderContainer
+  },
+  {
+    path: '/inventory',
+    component: InventoryContainer
+  },
+  {
+    path: '/movement',
+    component: InventoryMovement
+  },
+  {
+    path: '/movement/:id',
+    component: InventoryMovement
+  },
+  {
+    path: '/product/edit/:id',
+    component: EditProductContainer
+  },
+  {
+    path: '/product/create',
+    component: CreateProductContainer
+  },
 ];
 
 const privateGardenerRoutes = [
   {
     path: '/gardener-job',
     component: GardenerJob
-  }
+  },
+
 ];
 
 const privateSalesRoutes = [
-
+  {
+    path: '/order',
+    component: OrderContainer
+  },
+  {
+    path: '/order/create',
+    component: CreateOrderContainer
+  },
+  {
+    path: '/order/edit/:id',
+    component: EditOrderContainer
+  },
+  {
+    path: '/order/:id',
+    component: SingleOrderContainer
+  },
+  {
+    path: '/inventory',
+    component: InventoryContainer
+  },
+  {
+    path: '/movement',
+    component: InventoryMovement
+  },
+  {
+    path: '/movement/:id',
+    component: InventoryMovement
+  },
+  {
+    path: '/product/edit/:id',
+    component: EditProductContainer
+  },
+  {
+    path: '/product/create',
+    component: CreateProductContainer
+  },
 ];
 
 const publicRoutes = [
-
+  {
+    path: '/',
+    component: HomeContainer
+  },
+  {
+    path: '/about-us',
+    component: AboutUsContainer
+  }
 ];
+
 
 function App() {
   const isAuthenticated = useSelector((state) => state.authenticated.isAuthenticated);
@@ -53,7 +145,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div >
+      <div>
         <NavbarContainer />
         <div>
           <Switch>
@@ -66,7 +158,6 @@ function App() {
         <FooterContainer />
       </div>
     </BrowserRouter>
-
   );
 }
 
