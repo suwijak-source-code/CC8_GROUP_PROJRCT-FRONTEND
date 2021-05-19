@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-
-
+import orderListsReducer from "../features/Order/OrderListsSlice";
+import productReducer from "../features/Product/ProductsSlice";
 
 export default configureStore({
-    reducer: {
-
-    }
+  reducer: {
+    orderLists: orderListsReducer,
+    products: productReducer,
+  },
 });
