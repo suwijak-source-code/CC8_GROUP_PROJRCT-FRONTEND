@@ -1,4 +1,4 @@
-import FooterComponent from "../../components/footer/FooterComponent"
+import FooterComponent from "../../components/footerComponent/FooterComponent"
 
 
 

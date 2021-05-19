@@ -1,0 +1,21 @@
+.login-input-container {
+    margin: 20px 0px 50px 0px;
+    padding: 0px 20px 0px 20px;
+    height: 30px;
+}
+
+.login-button-container{
+    margin: 20px 0px 20px 0px;
+}
+
+.login-input-box{
+    border: 1px solid gray;
+    border-radius: 5px;
+    background-color: #F5F5F5;
+    width: 100%;
+    height: 40px;
+}
+
+.login-error{
+    margin: 5px 0px;
+}

@@ -13,9 +13,8 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <ChakraProvider theme={theme}>
-        {/* <Fonts> */}
+        <Fonts />
         <App />
-        {/* </Fonts> */}
       </ChakraProvider>
     </Provider>
   </React.StrictMode>,
