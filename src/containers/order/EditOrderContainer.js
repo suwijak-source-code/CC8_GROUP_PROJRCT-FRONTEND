@@ -20,11 +20,13 @@ import {
 import { useEffect, useState } from "react";
 import axios from "../../config/axios";
 import { PhoneIcon } from "@chakra-ui/icons";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setOrders } from "../../features/Order/OrderListsSlice";
 
-function CreateOrderContainer() {
+function EditOrderContainer() {
+  const params = useParams();
+  const [order, setOrder] = useState({});
   const [products, setProducts] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [customer, setCustomer] = useState("");
@@ -32,14 +34,33 @@ function CreateOrderContainer() {
   const [address, setAddress] = useState("");
   const [items, setItems] = useState([]);
   const [invNo, setInvNo] = useState("");
-  const [date, setDate] = useState(
-    new Date(Date.parse(new Date()) + 25200000).toISOString().slice(0, 10)
-  );
+  const [date, setDate] = useState("");
   const [isInvNoAlreadyUsed, setIsInvNoAlreadyUsed] = useState(false);
   const history = useHistory();
   const orders = useSelector((state) => state.orderLists.orders);
   const dispatch = useDispatch();
   const fetchOrder = async () => {
+    try {
+      const res = await axios.get("/order/" + params.id);
+      console.log(res.data.order);
+      setOrder(res.data.order);
+      setInvNo(res.data.order.invNo);
+      setDate(res.data.order.date.slice(0, 10));
+      setCustomer(res.data.order.name);
+      setAddress(res.data.order.address);
+      setPhone(res.data.order.phone);
+      const newItems = res.data.order.OrderItems.map((orderItem, index) => ({
+        quantity: +orderItem.quantity,
+        price: +orderItem.price,
+        productId: orderItem.productId,
+        productName: orderItem.Product.name,
+      }));
+      setItems(newItems);
+    } catch (err) {
+      console.dir(err);
+    }
+  };
+  const fetchOrders = async () => {
     const res = await axios.get("/order");
     dispatch(setOrders(res.data.orders));
   };
@@ -63,15 +84,16 @@ function CreateOrderContainer() {
   useEffect(() => {
     fetchProducts();
     fetchCustomers();
+    fetchOrders();
     fetchOrder();
   }, []);
   const handleInvNoChange = (e) => {
-    for (let order of orders) {
-      if (order.invNo === e.target.value) {
+    for (let item of orders) {
+      if (item.invNo === e.target.value && order.invNo !== e.target.value) {
         setInvNo(e.target.value);
         return setIsInvNoAlreadyUsed(true);
       }
-      if (order.invNo !== e.target.value) {
+      if (item.invNo !== e.target.value) {
         setIsInvNoAlreadyUsed(false);
         setInvNo(e.target.value);
       }
@@ -100,7 +122,7 @@ function CreateOrderContainer() {
   const handleSelectProduct = (e) => {
     if (e.target.value === "") return;
     const isProductAlreadyInOrders = items.findIndex(
-      (item) => item.productId === e.target.value.split("/")[0]
+      (item) => item.productId === +e.target.value.split("/")[0]
     );
     if (isProductAlreadyInOrders !== -1) return;
     const newItems = [...items];
@@ -126,19 +148,41 @@ function CreateOrderContainer() {
     setItems(newItems);
     console.log(newItems[index]);
   };
+  const handleDeleteItem = (index) => {
+    const newItems = [...items];
+    newItems.splice(index, 1);
+    setItems(newItems);
+  };
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      const res = await axios.post("/order", {
+      const res = await axios.put("/order/" + params.id, {
         invNo,
         date,
         address,
         phone,
         customerId: customer.id,
         name: customer.fullName,
-        orderItems: items,
+        editOrderItems: items.filter(
+          (item) =>
+            order.OrderItems.findIndex(
+              (orderItem) => orderItem.productId === item.productId
+            ) !== -1
+        ),
+        createOrderItems: items.filter(
+          (item) =>
+            order.OrderItems.findIndex(
+              (orderItem) => orderItem.productId === item.productId
+            ) === -1
+        ),
+        deleteOrderItems: order.OrderItems.filter(
+          (orderItem) =>
+            items.findIndex(
+              (item) => item.productId === orderItem.productId
+            ) === -1
+        ),
       });
-      history.push("/order/" + res.data.order.id);
+      history.push("/order/" + params.id);
     } catch (err) {
       console.dir(err);
     }
@@ -284,6 +328,16 @@ function CreateOrderContainer() {
                           />
                         </Td>
                         <Td isNumeric>{item.quantity * item.price}</Td>
+                        <Td>
+                          <Text
+                            color="red"
+                            textDecor="underline"
+                            _hover={{ cursor: "pointer", color: "darkred" }}
+                            onClick={() => handleDeleteItem(index)}
+                          >
+                            ลบ
+                          </Text>
+                        </Td>
                       </Tr>
                     ))}
                   </Tbody>
@@ -346,4 +400,4 @@ function CreateOrderContainer() {
   );
 }
 
-export default CreateOrderContainer;
+export default EditOrderContainer;
