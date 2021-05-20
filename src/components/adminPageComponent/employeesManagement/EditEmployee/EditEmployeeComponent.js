@@ -124,11 +124,13 @@ const EditEmployeeComponent = () => {
                                 <FormLabel my="3">เลขประจำตัวประชาชน:</FormLabel>
                                 <Input name="nationalId" value={editEmployee.nationalId} placeholder="เลขประจำตัวประชาชน"
                                     onChange={handleInputChange} />
+                                {error.nationalId && <Box as="span" textAlign="center" color="#E53E3E">{error.nationalId}</Box>}
                             </Flex>
                             <Flex flexFlow="column wrap">
                                 <FormLabel my="3">อีเมล:</FormLabel>
                                 <Input type="email" name="email" value={editEmployee.email} placeholder="อีเมล"
                                     onChange={handleInputChange} />
+                                {error.email && <Box as="span" textAlign="center" color="#E53E3E">{error.email}</Box>}
                             </Flex>
                             <Flex flexFlow="column wrap">
                                 <FormLabel my="3">ชื่อ-นามสกุล:</FormLabel>
@@ -136,10 +138,12 @@ const EditEmployeeComponent = () => {
                                     <Box mr="4" maxW="600px" w="100%">
                                         <Input name="firstName" value={editEmployee.firstName} placeholder="ชื่อ"
                                             onChange={handleInputChange} />
+                                        {error.firstName && <Box as="span" textAlign="center" color="#E53E3E">{error.firstName}</Box>}
                                     </Box>
                                     <Box ml="4" maxW="600px" w="100%">
                                         <Input name="lastName" value={editEmployee.lastName} placeholder="นามสกุล"
                                             onChange={handleInputChange} />
+                                        {error.lastName && <Box as="span" textAlign="center" color="#E53E3E">{error.lastName}</Box>}
                                     </Box>
                                 </Flex>
                             </Flex>
@@ -151,6 +155,7 @@ const EditEmployeeComponent = () => {
                                             <option value="male">ชาย</option>
                                             <option value="female">หญิง</option>
                                         </Select>
+                                        {error.gender && <Box as="span" textAlign="center" color="#E53E3E">{error.gender}</Box>}
                                     </Box>
                                 </Flex>
                                 <Flex flexFlow="column wrap">
@@ -158,6 +163,7 @@ const EditEmployeeComponent = () => {
                                     <Box ml="4">
                                         <Input type="date" name="birthDate" value={editEmployee.birthDate} placeholder="วันเกิด"
                                             onChange={handleInputChange} />
+                                        {error.birthDate && <Box as="span" textAlign="center" color="#E53E3E">{error.birthDate}</Box>}
                                     </Box>
                                 </Flex>
                                 <Flex flexFlow="column wrap">
@@ -165,6 +171,7 @@ const EditEmployeeComponent = () => {
                                     <Box ml="4">
                                         <Input type="date" name="startDate" value={editEmployee.startDate} placeholder="วันเริ่มทำงาน"
                                             onChange={handleInputChange} />
+                                        {error.startDate && <Box as="span" textAlign="center" color="#E53E3E">{error.startDate}</Box>}
                                     </Box>
                                 </Flex>
                                 <Flex flexFlow="column wrap">
@@ -175,6 +182,7 @@ const EditEmployeeComponent = () => {
                                             <option value="gardener">คนสวน</option>
                                             <option value="sales">พนักงานขาย</option>
                                         </Select>
+                                        {error.role && <Box as="span" textAlign="center" color="#E53E3E">{error.role}</Box>}
                                     </Box>
                                 </Flex>
                                 <Flex flexFlow="column wrap">
@@ -185,6 +193,7 @@ const EditEmployeeComponent = () => {
                                             <option value="break">พักงาน</option>
                                             <option value="quited">ลาออก</option>
                                         </Select>
+                                        {error.status && <Box as="span" textAlign="center" color="#E53E3E">{error.status}</Box>}
                                     </Box>
                                 </Flex>
                             </Flex>
@@ -193,11 +202,13 @@ const EditEmployeeComponent = () => {
                                 <FormLabel >ที่อยู่:</FormLabel>
                                 <Textarea name="address" value={editEmployee.address} placeholder="ที่อยู่"
                                     onChange={handleInputChange} />
+                                {error.address && <Box as="span" textAlign="center" color="#E53E3E">{error.address}</Box>}
                             </Flex>
                             <Flex flexFlow="column wrap">
                                 <FormLabel my="3">เบอร์โทรศัพท์:</FormLabel>
                                 <Input name="phone" value={editEmployee.phone} placeholder="เบอร์โทรศัพท์"
                                     onChange={handleInputChange} />
+                                {error.phone && <Box as="span" textAlign="center" color="#E53E3E">{error.phone}</Box>}
                             </Flex>
                         </FormControl>
                         <Flex my="5">

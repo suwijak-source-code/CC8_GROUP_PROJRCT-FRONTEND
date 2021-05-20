@@ -84,16 +84,19 @@ const ChangePasswordComponent = ({ setChangePassword }) => {
                                 <FormLabel my="3">รหัสผ่านเก่า:</FormLabel>
                                 <Input type="password" name="oldPassword" value={dataPassword.oldPassword} placeholder="รหัสผ่านเก่า"
                                     onChange={handleInputChange} />
+                                {error.oldPassword && <Box as="span" textAlign="center" color="#E53E3E">{error.oldPassword}</Box>}
                             </Flex>
                             <Flex flexFlow="column wrap">
                                 <FormLabel my="3">รหัสผ่านใหม่:</FormLabel>
                                 <Input type="password" name="newPassword" value={dataPassword.newPassword} placeholder="รหัสผ่านใหม่"
                                     onChange={handleInputChange} />
+                                {error.newPassword && <Box as="span" textAlign="center" color="#E53E3E">{error.newPassword}</Box>}
                             </Flex>
                             <Flex flexFlow="column wrap">
                                 <FormLabel my="3">ยืนยันรหัสผ่านใหม่:</FormLabel>
                                 <Input type="password" name="newConfirmPassword" value={dataPassword.newConfirmPassword} placeholder="ยืนยันรหัสผ่านใหม่"
                                     onChange={handleInputChange} />
+                                {error.newConfirmPassword && <Box as="span" textAlign="center" color="#E53E3E">{error.newConfirmPassword}</Box>}
                             </Flex>
                         </FormControl>
                         <Box my="5">

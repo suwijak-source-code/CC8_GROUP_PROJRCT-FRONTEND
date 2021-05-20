@@ -19,8 +19,7 @@ const NavbarContainer = () => {
                     <LogoComponent />
                 </div>
                 <div className="nav-link">
-                    {role === 'admin' && <LinkMenuComponent />}
-                    {role !== 'admin' && <></>}
+                    <LinkMenuComponent />
                 </div>
             </div>
             <div className="nav-container-button">

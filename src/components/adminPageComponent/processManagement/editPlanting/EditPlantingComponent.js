@@ -7,15 +7,18 @@ import {
     NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, Select
 } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
-import { setFarmManagement, setSeedManagement, setPlantingManagement } from "../../../../features/ProcessManagement/ProcessManagementSlice";
+import {
+    setFarmManagement, setSeedManagement, setPlantingManagement, setAllPlanting, setInProgressPlanting, setHarvestPlanting,
+    setFinishPlanting, setCancelPlanting, setPlantingList
+} from "../../../../features/ProcessManagement/ProcessManagementSlice";
 import { setCurrentPage, setPageNumber } from "../../../../features/Paginate/PaginateSlice";
 
 
-const EditPlantingComponent = ({ eachPlanting, setOpenPopupEdit, setAll, setCancel, setInProgress,
-    setHarvest, setFinish, setPlantingList }) => {
+const EditPlantingComponent = ({ setOpenPopupEdit, setAll, setCancel, setInProgress,
+    setHarvest, setFinish }) => {
     const [editPlanting, setEditPlanting] = useState({
         farmName: '', seedName: '', startDate: '', plantingApprovedFName: '', plantingApprovedLName: '', plantingRemark: '',
-        customerName: '', plantedAmount: ''
+        customerName: '', plantedAmount: '', fertilizerPrice: '', maintenanceCost: '', miscellaneousExpenses: ''
     });
     const [farm, setFarm] = useState([]);
     const [seed, setSeed] = useState([]);
@@ -24,6 +27,7 @@ const EditPlantingComponent = ({ eachPlanting, setOpenPopupEdit, setAll, setCanc
     const history = useHistory();
     const dispatch = useDispatch();
     const listPerPage = useSelector((state) => state.paginate.listPerPage);
+    const eachPlanting = useSelector((state) => state.processManagement.eachPlanting);
 
     useEffect(() => {
         const fetchList = async () => {
@@ -52,7 +56,8 @@ const EditPlantingComponent = ({ eachPlanting, setOpenPopupEdit, setAll, setCanc
             startDate: eachPlanting.startDate,
             plantingApprovedFName: eachPlanting.PlantingApproved.firstName,
             plantingApprovedLName: eachPlanting.PlantingApproved.lastName, plantingRemark: eachPlanting.remark,
-            customerName: customer, plantedAmount: eachPlanting.plantedAmount
+            customerName: customer, plantedAmount: eachPlanting.plantedAmount, fertilizerPrice: eachPlanting.fertilizerPrice,
+            maintenanceCost: eachPlanting.maintenanceCost, miscellaneousExpenses: eachPlanting.miscellaneousExpenses
         })
     }, []);
 
@@ -65,6 +70,19 @@ const EditPlantingComponent = ({ eachPlanting, setOpenPopupEdit, setAll, setCanc
         setEditPlanting(prev => ({ ...prev, plantedAmount: value }));
     };
 
+    const handleFertilizerPrice = (value) => {
+        setEditPlanting(prev => ({ ...prev, fertilizerPrice: value }));
+    };
+
+    const handleMaintenanceCost = (value) => {
+        setEditPlanting(prev => ({ ...prev, maintenanceCost: value }));
+    };
+
+    const handleMiscellaneousExpenses = (value) => {
+        setEditPlanting(prev => ({ ...prev, miscellaneousExpenses: value }));
+    };
+
+
     const validateInput = () => {
         const newError = {};
         if (!editPlanting.farmName) newError.farmName = 'กรุณาระบุชื่อสวน';
@@ -73,6 +91,9 @@ const EditPlantingComponent = ({ eachPlanting, setOpenPopupEdit, setAll, setCanc
         if (!editPlanting.plantingApprovedLName) newError.plantingApprovedLName = 'กรุณาระบุนามสกุลผู้อนุมัติ';
         if (!editPlanting.startDate) newError.startDate = 'กรุณาระบุวันเริ่มปลูก';
         if (!editPlanting.plantedAmount) newError.plantedAmount = 'กรุณาระบุจำนวนที่ปลูก';
+        if (!editPlanting.fertilizerPrice) newError.fertilizerPrice = 'กรุณาระบุราคาปุ๋ย';
+        if (!editPlanting.maintenanceCost) newError.maintenanceCost = 'กรุณาระบุค่าดูแลรักษา';
+        if (!editPlanting.miscellaneousExpenses) newError.miscellaneousExpenses = 'กรุณาระบุค่าใช้จ่ายเบ็ดเตล็ด';
         setError(newError);
     };
 
@@ -83,19 +104,20 @@ const EditPlantingComponent = ({ eachPlanting, setOpenPopupEdit, setAll, setCanc
             await axios.put(`/plantings/${eachPlanting.id}`, {
                 farmName: editPlanting.farmName, seedName: editPlanting.seedName, startDate: editPlanting.startDate,
                 plantingApprovedFName: editPlanting.plantingApprovedFName, plantingApprovedLName: editPlanting.plantingApprovedLName,
-                plantingRemark: editPlanting.plantingRemark, customerName: editPlanting.customerName, plantedAmount: editPlanting.plantedAmount
+                plantingRemark: editPlanting.plantingRemark, customerName: editPlanting.customerName, plantedAmount: editPlanting.plantedAmount,
+                fertilizerPrice: editPlanting.fertilizerPrice, maintenanceCost: editPlanting.maintenanceCost, miscellaneousExpenses: editPlanting.miscellaneousExpenses
             });
-            setOpenPopupEdit(false);
+            history.push('/process-management');
             dispatch(setFarmManagement(false));
             dispatch(setSeedManagement(false));
             dispatch(setPlantingManagement(true));
-            setAll(true);
-            setInProgress(false);
-            setHarvest(false);
-            setFinish(false);
-            setCancel(false);
+            dispatch(setAllPlanting(true));
+            dispatch(setInProgressPlanting(false));
+            dispatch(setHarvestPlanting(false));
+            dispatch(setFinishPlanting(false));
+            dispatch(setCancelPlanting(false));
             const res = await axios.get(`/plantings/${'all'}`);
-            setPlantingList(res.data.planting);
+            dispatch(setPlantingList(res.data.planting));
             if (res.data.planting && res.data.planting.length > 0) {
                 dispatch(setCurrentPage(1));
                 const pageNumberTmp = [];
@@ -117,60 +139,74 @@ const EditPlantingComponent = ({ eachPlanting, setOpenPopupEdit, setAll, setCanc
         };
     };
 
-    const handleClose = (e) => {
-        e.preventDefault();
-        setOpenPopupEdit(false);
-    };
-
     const handleReset = (e) => {
         e.preventDefault();
         setEditPlanting({
             farmName: '', seedName: '', startDate: '', plantingApprovedFName: '', plantingApprovedLName: '', plantingRemark: '',
-            customerName: '', plantedAmount: ''
+            customerName: '', plantedAmount: '', fertilizerPrice: '', maintenanceCost: '', miscellaneousExpenses: ''
         })
     };
 
-    return (
-        <div className="popup-planting-edit">
-            <div className="popup-planting-edit-from">
-                <div>
-                    <a className="close-popup-planting-edit" onClick={handleClose}>&#10006;</a>
-                </div>
-                <div>
-                    <h1><b>แก้ไขการผลิต</b></h1>
-                </div>
-                <div><hr /></div>
-                <div>
-                    <form onSubmit={handlerSubmit}>
-                        <FormControl isRequired>
-                            <Flex flexFlow="column wrap">
-                                <FormLabel my="1">ชื่อแปลงปลูก:</FormLabel>
-                                {editPlanting.farmName && <Select name="farmName" value={editPlanting.farmName} onChange={handleInputChange} placeholder="กรุณาเลือกแปลงปลูก">
-                                    {farm.map((item, index) => {
-                                        if (item.status === 'idle' || item.name === editPlanting.farmName) {
-                                            return <option key={index} value={item.name}>{item.name}</option>
-                                        }
-                                    })}
-                                </Select>}
-                                {!editPlanting.farmName && <Select name="farmName" onChange={handleInputChange} placeholder="กรุณาเลือกแปลงปลูก">
-                                    {farm.map((item, index) => {
-                                        if (item.status === 'idle') {
-                                            return <option key={index} value={item.name}>{item.name}</option>
-                                        }
-                                    })}
-                                </Select>}
-                            </Flex>
-                            <Flex flexFlow="column wrap">
-                                <FormLabel my="1">ชื่อเมล็ดพันธุ์:</FormLabel>
-                                {editPlanting.seedName && <Select name="seedName" value={editPlanting.seedName} onChange={handleInputChange} placeholder="กรุณาเลือกเมล็ดพันธุ์">
-                                    {seed.map((item, index) => <option key={index} value={item.name} >{item.name}</option>)}
-                                </Select>}
-                                {!editPlanting.seedName && <Select name="seedName" onChange={handleInputChange} placeholder="กรุณาเลือกเมล็ดพันธุ์">
-                                    {seed.map((item, index) => <option key={index} value={item.name} >{item.name}</option>)}
-                                </Select>}
+    const handleCancel = (e) => {
+        e.preventDefault();
+        history.push('/process-management');
+        dispatch(setFarmManagement(false));
+        dispatch(setSeedManagement(false));
+        dispatch(setPlantingManagement(true));
+        dispatch(setAllPlanting(true));
+        dispatch(setInProgressPlanting(false));
+        dispatch(setHarvestPlanting(false));
+        dispatch(setFinishPlanting(false));
+        dispatch(setCancelPlanting(false));
+    }
 
-                            </Flex>
-                            <Flex flexFlow="column wrap">
+    return (
+        <Box py="5" px="40">
+            <Box textAlign="center" my="5">
+                <h1><b><u>แก้ไขการผลิต</u></b></h1>
+            </Box>
+            <Box><hr /></Box>
+            <Box my="5">
+                <form onSubmit={handlerSubmit}>
+                    <FormControl isRequired>
+                        <Flex flexFlow="column wrap">
+                            <FormLabel my="1">ชื่อแปลงปลูก:</FormLabel>
+                            {editPlanting.farmName && <Select name="farmName" value={editPlanting.farmName} onChange={handleInputChange} placeholder="กรุณาเลือกแปลงปลูก">
+                                {farm.map((item, index) => {
+                                    if (item.status === 'idle' || item.name === editPlanting.farmName) {
+                                        return <option key={index} value={item.name}>{item.name}</option>
+                                    }
+                                })}
+                            </Select>}
+                            {!editPlanting.farmName && <Select name="farmName" onChange={handleInputChange} placeholder="กรุณาเลือกแปลงปลูก">
+                                {farm.map((item, index) => {
+                                    if (item.status === 'idle') {
+                                        return <option key={index} value={item.name}>{item.name}</option>
+                                    }
+                                })}
+                            </Select>}
+                            {error.farmName && <Box as="span" textAlign="center" color="#E53E3E">{error.farmName}</Box>}
+                        </Flex>
+                        <Flex flexFlow="column wrap">
+                            <FormLabel my="1">ชื่อเมล็ดพันธุ์:</FormLabel>
+                            {editPlanting.seedName && <Select name="seedName" value={editPlanting.seedName} onChange={handleInputChange} placeholder="กรุณาเลือกเมล็ดพันธุ์">
+                                {seed.map((item, index) => <option key={index} value={item.name} >{item.name}</option>)}
+                            </Select>}
+                            {!editPlanting.seedName && <Select name="seedName" onChange={handleInputChange} placeholder="กรุณาเลือกเมล็ดพันธุ์">
+                                {seed.map((item, index) => <option key={index} value={item.name} >{item.name}</option>)}
+                            </Select>}
+                            {error.seedName && <Box as="span" textAlign="center" color="#E53E3E">{error.seedName}</Box>}
+                        </Flex>
+
+                        <Flex flexFlow="column wrap">
+                            <FormLabel my="1">วันเริ่มปลูก:</FormLabel>
+                            <Input type="date" min={`${new Date().getFullYear()}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + (new Date().getDate())).slice(-2)}`}
+                                name="startDate" value={editPlanting.startDate} placeholder="วันเริ่มปลูก"
+                                onChange={handleInputChange} />
+                            {error.startDate && <Box as="span" textAlign="center" color="#E53E3E">{error.startDate}</Box>}
+                        </Flex>
+                        <Flex flexFlow="row wrap" justifyContent="space-between">
+                            <Flex mr="4" flexFlow="column wrap" mr="2">
                                 <FormLabel my="1">จำนวนที่ปลูก:</FormLabel>
                                 <NumberInput defaultValue={0} min={0} name="plantedAmount" value={editPlanting.plantedAmount}
                                     onChange={handlePlantedAmountChange}>
@@ -180,52 +216,88 @@ const EditPlantingComponent = ({ eachPlanting, setOpenPopupEdit, setAll, setCanc
                                         <NumberDecrementStepper />
                                     </NumberInputStepper>
                                 </NumberInput>
+                                {error.plantedAmount && <Box as="span" textAlign="center" color="#E53E3E">{error.plantedAmount}</Box>}
                             </Flex>
-                            <Flex flexFlow="column wrap">
-                                <FormLabel my="1">วันเริ่มปลูก:</FormLabel>
-                                <Input type="date" min={`${new Date().getFullYear()}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + (new Date().getDate())).slice(-2)}`}
-                                    name="startDate" value={editPlanting.startDate} placeholder="วันเริ่มปลูก"
-                                    onChange={handleInputChange} />
+                            <Flex mx="4" flexFlow="column wrap" ml="2">
+                                <FormLabel my="1">ราคาปุ๋ย: (บาท)</FormLabel>
+                                <NumberInput defaultValue={0} min={0} name="fertilizerPrice" value={editPlanting.fertilizerPrice}
+                                    onChange={handleFertilizerPrice}>
+                                    <NumberInputField />
+                                    <NumberInputStepper>
+                                        <NumberIncrementStepper />
+                                        <NumberDecrementStepper />
+                                    </NumberInputStepper>
+                                </NumberInput>
+                                {error.fertilizerPrice && <Box as="span" textAlign="center" color="#E53E3E">{error.fertilizerPrice}</Box>}
                             </Flex>
-                            <Flex flexFlow="column wrap">
-                                <FormLabel my="1">ชื่อ-นามสกุล ผู้อนุมัติ:</FormLabel>
-                                <Flex justifyContent="space-between">
-                                    <Box>
-                                        <Input name="plantingApprovedFName" value={editPlanting.plantingApprovedFName} placeholder="ชื่อ"
-                                            onChange={handleInputChange} />
-                                    </Box>
-                                    <Box>
-                                        <Input name="plantingApprovedLName" value={editPlanting.plantingApprovedLName} placeholder="นามสกุล"
-                                            onChange={handleInputChange} />
-                                    </Box>
-                                </Flex>
+                            <Flex mx="4" flexFlow="column wrap" mr="2">
+                                <FormLabel my="1">ค่าลูแลรักษา: (บาท)</FormLabel>
+                                <NumberInput defaultValue={0} min={0} name="maintenanceCost" value={editPlanting.maintenanceCost}
+                                    onChange={handleMaintenanceCost}>
+                                    <NumberInputField />
+                                    <NumberInputStepper>
+                                        <NumberIncrementStepper />
+                                        <NumberDecrementStepper />
+                                    </NumberInputStepper>
+                                </NumberInput>
+                                {error.maintenanceCost && <Box as="span" textAlign="center" color="#E53E3E">{error.maintenanceCost}</Box>}
                             </Flex>
-                        </FormControl>
-                        <Flex my="1" flexFlow="column wrap">
-                            <FormLabel my="1">ชื่อลูกค้าที่จอง:</FormLabel>
-                            <Input name="customerName" value={editPlanting.customerName} placeholder="ชื่อลูกค้าที่จอง"
-                                onChange={handleInputChange} />
+                            <Flex ml="4" flexFlow="column wrap" ml="2">
+                                <FormLabel my="1">ค่าใช้จ่ายเบ็ดเตล็ด: (บาท)</FormLabel>
+                                <NumberInput defaultValue={0} min={0} name="miscellaneousExpenses" value={editPlanting.miscellaneousExpenses}
+                                    onChange={handleMiscellaneousExpenses}>
+                                    <NumberInputField />
+                                    <NumberInputStepper>
+                                        <NumberIncrementStepper />
+                                        <NumberDecrementStepper />
+                                    </NumberInputStepper>
+                                </NumberInput>
+                                {error.miscellaneousExpenses && <Box as="span" textAlign="center" color="#E53E3E">{error.miscellaneousExpenses}</Box>}
+                            </Flex>
                         </Flex>
-                        <Box my="1">
-                            <FormLabel >หมายเหตุ:</FormLabel>
-                            <Textarea name="plantingRemark" value={editPlanting.plantingRemark} placeholder="หมายเหตุ"
-                                onChange={handleInputChange} />
-                        </Box>
-                        <Box my="3">
-                            <hr />
-                        </Box>
-                        <Flex justifyContent="center">
-                            <Box mx="3">
-                                <Button variant="primary" type="submit" size="sm">แก้ไข</Button>
-                            </Box>
-                            <Box mx="3">
-                                <Button variant="primary" size="sm" onClick={handleReset}>ล้าง</Button>
-                            </Box>
+
+                        <Flex flexFlow="column wrap">
+                            <FormLabel my="1">ชื่อ-นามสกุล ผู้อนุมัติ:</FormLabel>
+                            <Flex justifyContent="space-between">
+                                <Box>
+                                    <Input name="plantingApprovedFName" value={editPlanting.plantingApprovedFName} placeholder="ชื่อ"
+                                        onChange={handleInputChange} />
+                                    {error.plantingApprovedFName && <Box as="span" textAlign="center" color="#E53E3E">{error.plantingApprovedFName}</Box>}
+                                </Box>
+                                <Box>
+                                    <Input name="plantingApprovedLName" value={editPlanting.plantingApprovedLName} placeholder="นามสกุล"
+                                        onChange={handleInputChange} />
+                                    {error.plantingApprovedLName && <Box as="span" textAlign="center" color="#E53E3E">{error.plantingApprovedLName}</Box>}
+                                </Box>
+                            </Flex>
                         </Flex>
-                    </form>
-                </div>
-            </div>
-        </div>
+                    </FormControl>
+                    <Flex my="1" flexFlow="column wrap">
+                        <FormLabel my="1">ชื่อลูกค้าที่จอง:</FormLabel>
+                        <Input name="customerName" value={editPlanting.customerName} placeholder="ชื่อลูกค้าที่จอง"
+                            onChange={handleInputChange} />
+                    </Flex>
+                    <Box my="1">
+                        <FormLabel >หมายเหตุ:</FormLabel>
+                        <Textarea name="plantingRemark" value={editPlanting.plantingRemark} placeholder="หมายเหตุ"
+                            onChange={handleInputChange} />
+                    </Box>
+
+                    <Flex my="10" justifyContent="center">
+                        <Box mx="3">
+                            <Button variant="primary" type="submit" size="sm">แก้ไข</Button>
+                        </Box>
+                        <Box mx="3">
+                            <Button variant="primary" size="sm" onClick={handleReset}>ล้าง</Button>
+                        </Box>
+                        <Box mx="3">
+                            <Button variant="primary" size="sm" onClick={handleCancel}>ยกเลิก</Button>
+                        </Box>
+                    </Flex>
+                </form>
+            </Box>
+            <Box my="5"><hr /></Box>
+        </Box>
     )
 }
 

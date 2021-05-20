@@ -4,10 +4,10 @@ import { Flex, FormControl, FormLabel, Input, Box, Button, Textarea } from "@cha
 import { useState } from "react";
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
-import { setFarmManagement, setSeedManagement, setPlantingManagement } from "../../../../features/ProcessManagement/ProcessManagementSlice";
+import { setFarmManagement, setSeedManagement, setPlantingManagement, setAllFarm, setInProgressFarm, setIdleFarm } from "../../../../features/ProcessManagement/ProcessManagementSlice";
 import { setCurrentPage, setPageNumber } from "../../../../features/Paginate/PaginateSlice";
 
-const AddFarmComponent = ({ setOpenPopupAdd, setFarmList, setAll, setInProgress, setIdle }) => {
+const AddFarmComponent = ({ setOpenPopupAdd, setFarmList }) => {
     const [createFarm, setCreateFarm] = useState({
         farmName: '', farmApprovedFName: '', farmApprovedLName: '', farmRemark: ''
     });
@@ -43,9 +43,9 @@ const AddFarmComponent = ({ setOpenPopupAdd, setFarmList, setAll, setInProgress,
             dispatch(setFarmManagement(true));
             dispatch(setSeedManagement(false));
             dispatch(setPlantingManagement(false));
-            setAll(true);
-            setInProgress(false);
-            setIdle(false);
+            dispatch(setAllFarm(true));
+            dispatch(setInProgressFarm(false));
+            dispatch(setIdleFarm(false));
             const res = await axios.get(`/farms/${'all'}`);
             setFarmList(res.data.farm);
             if (res.data.farm && res.data.farm.length > 0) {
@@ -98,6 +98,7 @@ const AddFarmComponent = ({ setOpenPopupAdd, setFarmList, setAll, setInProgress,
                                 <FormLabel my="3">ชื่อสวน:</FormLabel>
                                 <Input name="farmName" value={createFarm.farmName} placeholder="ชื่อสวน"
                                     onChange={handleInputChange} />
+                                {error.farmName && <Box as="span" textAlign="center" color="#E53E3E">{error.farmName}</Box>}
                             </Flex>
                             <Flex flexFlow="column wrap">
                                 <FormLabel my="3">ชื่อ-นามสกุล ผู้อนุมัติ:</FormLabel>
@@ -105,10 +106,12 @@ const AddFarmComponent = ({ setOpenPopupAdd, setFarmList, setAll, setInProgress,
                                     <Box>
                                         <Input name="farmApprovedFName" value={createFarm.farmApprovedFName} placeholder="ชื่อ"
                                             onChange={handleInputChange} />
+                                        {error.farmApprovedFName && <Box as="span" textAlign="center" color="#E53E3E">{error.farmApprovedFName}</Box>}
                                     </Box>
                                     <Box>
                                         <Input name="farmApprovedLName" value={createFarm.farmApprovedLName} placeholder="นามสกุล"
                                             onChange={handleInputChange} />
+                                        {error.farmApprovedLName && <Box as="span" textAlign="center" color="#E53E3E">{error.farmApprovedLName}</Box>}
                                     </Box>
                                 </Flex>
                             </Flex>

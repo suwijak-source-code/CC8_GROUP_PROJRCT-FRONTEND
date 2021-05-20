@@ -1,16 +1,10 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Image } from "@chakra-ui/react";
 
 function home() {
   return (
     <>
       <Box p="10px" m="15px">
-        <h1>Welcome to PLANT MANAGER</h1>
-        <Box>
-          <p>
-            This is a site to help a gardener to get best performance to sent a
-            best things to they clients.
-          </p>
-        </Box>
+        <Image height="60px" src="img/head.png" />
       </Box>
     </>
   );

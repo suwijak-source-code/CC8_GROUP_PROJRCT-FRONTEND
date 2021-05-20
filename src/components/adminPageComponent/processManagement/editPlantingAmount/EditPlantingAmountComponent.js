@@ -6,13 +6,15 @@ import {
     Flex, FormControl, FormLabel, Input, Box, Button, NumberInput, NumberInputField,
     NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper
 } from "@chakra-ui/react";
-import { setFarmManagement, setSeedManagement, setPlantingManagement } from "../../../../features/ProcessManagement/ProcessManagementSlice";
+import {
+    setFarmManagement, setSeedManagement, setPlantingManagement, setAllPlanting, setInProgressPlanting, setHarvestPlanting,
+    setFinishPlanting, setCancelPlanting, setPlantingList
+} from "../../../../features/ProcessManagement/ProcessManagementSlice";
 import { setCurrentPage, setPageNumber } from "../../../../features/Paginate/PaginateSlice";
 
 
 
-const EditPlantingAmount = ({ eachPlanting, setEditAmount, setPlantingList, setAll, setInProgress, setHarvest
-    , setFinish, setCancel }) => {
+const EditPlantingAmount = ({ setEditAmount }) => {
     const [amount, setAmount] = useState({
         farmName: '', seedName: '', harvestedAmount: ''
     });
@@ -20,10 +22,11 @@ const EditPlantingAmount = ({ eachPlanting, setEditAmount, setPlantingList, setA
 
     const dispatch = useDispatch();
     const listPerPage = useSelector((state) => state.paginate.listPerPage);
+    const eachPlanting = useSelector((state) => state.processManagement.eachPlanting);
 
     useEffect(() => {
         setAmount({
-            farmName: eachPlanting.farmName, seedName: eachPlanting.seedName, harvestedAmount: eachPlanting.harvestedAmount
+            farmName: eachPlanting.Farm.name, seedName: eachPlanting.Seed.name, harvestedAmount: eachPlanting.harvestedAmount
         });
     }, []);
 
@@ -48,13 +51,13 @@ const EditPlantingAmount = ({ eachPlanting, setEditAmount, setPlantingList, setA
             dispatch(setFarmManagement(false));
             dispatch(setSeedManagement(false));
             dispatch(setPlantingManagement(true));
-            setAll(true);
-            setInProgress(false);
-            setHarvest(false);
-            setFinish(false);
-            setCancel(false);
+            dispatch(setAllPlanting(true));
+            dispatch(setInProgressPlanting(false));
+            dispatch(setHarvestPlanting(false));
+            dispatch(setFinishPlanting(false));
+            dispatch(setCancelPlanting(false));
             const res = await axios.get(`/plantings/${'all'}`);
-            setPlantingList(res.data.planting);
+            dispatch(setPlantingList(res.data.planting));
             if (res.data.planting && res.data.planting.length > 0) {
                 dispatch(setCurrentPage(1));
                 const pageNumberTmp = [];
@@ -87,6 +90,7 @@ const EditPlantingAmount = ({ eachPlanting, setEditAmount, setPlantingList, setA
             harvestedAmount: ''
         })
     };
+    console.log(eachPlanting)
     return (
         <div className="popup-planting-edit-amount">
             <div className="popup-planting-edit-amount-from">
@@ -94,7 +98,7 @@ const EditPlantingAmount = ({ eachPlanting, setEditAmount, setPlantingList, setA
                     <a className="close-popup-planting-edit-amount" onClick={handleClose}>&#10006;</a>
                 </div>
                 <div>
-                    <h1><b>แก้ไขการผลิต</b></h1>
+                    <h1><b>แก้ไขจำนวนผลผลิต</b></h1>
                 </div>
                 <div><hr /></div>
                 <div>
@@ -118,6 +122,7 @@ const EditPlantingAmount = ({ eachPlanting, setEditAmount, setPlantingList, setA
                                         <NumberDecrementStepper />
                                     </NumberInputStepper>
                                 </NumberInput>
+                                {error.harvestedAmount && <Box as="span" textAlign="center" color="#E53E3E">{error.harvestedAmount}</Box>}
                             </Flex>
                         </FormControl>
                         <Box my="3">

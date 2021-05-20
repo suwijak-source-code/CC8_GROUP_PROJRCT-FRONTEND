@@ -40,6 +40,7 @@ const FormLoginComponent = () => {
                 history.push('/gardener-job');
             } else if (res.data.role === "sales") {
                 dispatch(setRole("sales"));
+                history.push('/order');
             }
         } catch (err) {
             if (err.response) {

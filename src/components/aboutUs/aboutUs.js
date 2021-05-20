@@ -7,7 +7,7 @@ function aboutUs() {
       <Box w="100%" p="40px" mt="50px">
         <Box border="2px" p="30px" bgColor="white">
           <Box>
-            <h2>ABOUT US</h2>
+            <h2><b>ABOUT US</b></h2>
           </Box>
           <Box display="flex" justifyContent="center" mt="20px">
             <p>
@@ -17,6 +17,9 @@ function aboutUs() {
               เพื่อตอบสนองความต้องการและเพื่อให้ทันต่อยุคสมัยดิจิทัล
             </p>
           </Box>
+        </Box>
+        <Box mt="5">
+          <hr />
         </Box>
       </Box>
     </>
