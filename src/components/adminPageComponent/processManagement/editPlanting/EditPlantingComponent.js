@@ -14,8 +14,7 @@ import {
 import { setCurrentPage, setPageNumber } from "../../../../features/Paginate/PaginateSlice";
 
 
-const EditPlantingComponent = ({ setOpenPopupEdit, setAll, setCancel, setInProgress,
-    setHarvest, setFinish }) => {
+const EditPlantingComponent = () => {
     const [editPlanting, setEditPlanting] = useState({
         farmName: '', seedName: '', startDate: '', plantingApprovedFName: '', plantingApprovedLName: '', plantingRemark: '',
         customerName: '', plantedAmount: '', fertilizerPrice: '', maintenanceCost: '', miscellaneousExpenses: ''
