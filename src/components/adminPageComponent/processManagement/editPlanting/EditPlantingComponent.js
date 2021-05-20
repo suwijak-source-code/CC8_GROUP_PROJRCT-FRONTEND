@@ -218,7 +218,7 @@ const EditPlantingComponent = () => {
                                 {error.plantedAmount && <Box as="span" textAlign="center" color="#E53E3E">{error.plantedAmount}</Box>}
                             </Flex>
                             <Flex mx="4" flexFlow="column wrap" ml="2">
-                                <FormLabel my="1">ราคาปุ๋ย: (บาท)</FormLabel>
+                                <FormLabel my="1">ราคาปุ๋ย (บาท):</FormLabel>
                                 <NumberInput defaultValue={0} min={0} name="fertilizerPrice" value={editPlanting.fertilizerPrice}
                                     onChange={handleFertilizerPrice}>
                                     <NumberInputField />
@@ -230,7 +230,7 @@ const EditPlantingComponent = () => {
                                 {error.fertilizerPrice && <Box as="span" textAlign="center" color="#E53E3E">{error.fertilizerPrice}</Box>}
                             </Flex>
                             <Flex mx="4" flexFlow="column wrap" mr="2">
-                                <FormLabel my="1">ค่าลูแลรักษา: (บาท)</FormLabel>
+                                <FormLabel my="1">ค่าลูแลรักษา (บาท):</FormLabel>
                                 <NumberInput defaultValue={0} min={0} name="maintenanceCost" value={editPlanting.maintenanceCost}
                                     onChange={handleMaintenanceCost}>
                                     <NumberInputField />
@@ -242,7 +242,7 @@ const EditPlantingComponent = () => {
                                 {error.maintenanceCost && <Box as="span" textAlign="center" color="#E53E3E">{error.maintenanceCost}</Box>}
                             </Flex>
                             <Flex ml="4" flexFlow="column wrap" ml="2">
-                                <FormLabel my="1">ค่าใช้จ่ายเบ็ดเตล็ด: (บาท)</FormLabel>
+                                <FormLabel my="1">ค่าใช้จ่ายเบ็ดเตล็ด (บาท):</FormLabel>
                                 <NumberInput defaultValue={0} min={0} name="miscellaneousExpenses" value={editPlanting.miscellaneousExpenses}
                                     onChange={handleMiscellaneousExpenses}>
                                     <NumberInputField />
