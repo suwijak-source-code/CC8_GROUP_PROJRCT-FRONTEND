@@ -18,127 +18,168 @@ import CreateProductContainer from "./containers/inventory/CreateProductContaine
 import InventoryMovement from "./containers/inventory/InventoryMovement";
 import HomeContainer from "./containers/home/home";
 import AboutUsContainer from "./containers/aboutUs/aboutUs";
+import Customer from "./containers/customer/Customer";
+import CreateCustomer from "./containers/customer/CreateCustomer";
+import EditCustomer from "./containers/customer/EditCustomer";
+import Farm from "./containers/farm(Nat)/Farm";
+import SinglePlantingPage from "./containers/farm(Nat)/SinglePlantingPage";
 
 const privateAdminRoutes = [
   {
-    path: '/process-management',
-    component: ProcessManagement
+    path: "/process-management",
+    component: ProcessManagement,
   },
   {
-    path: '/employees-management',
-    component: EmployeesManagement
+    path: "/employees-management",
+    component: EmployeesManagement,
   },
   {
-    path: '/add-employees',
-    component: AddEmployee
+    path: "/add-employees",
+    component: AddEmployee,
   },
   {
-    path: '/edit-employees',
-    component: EditEmployee
+    path: "/edit-employees",
+    component: EditEmployee,
   },
   {
-    path: '/work-plan-management',
-    component: WorkPlanManagement
+    path: "/work-plan-management",
+    component: WorkPlanManagement,
   },
   {
-    path: '/order',
-    component: OrderContainer
+    path: "/order",
+    component: OrderContainer,
   },
   {
-    path: '/order/create',
-    component: CreateOrderContainer
+    path: "/order/create",
+    component: CreateOrderContainer,
   },
   {
-    path: '/order/edit/:id',
-    component: EditOrderContainer
+    path: "/order/edit/:id",
+    component: EditOrderContainer,
   },
   {
-    path: '/order/:id',
-    component: SingleOrderContainer
+    path: "/order/:id",
+    component: SingleOrderContainer,
   },
   {
-    path: '/inventory',
-    component: InventoryContainer
+    path: "/inventory",
+    component: InventoryContainer,
   },
   {
-    path: '/movement',
-    component: InventoryMovement
+    path: "/movement",
+    component: InventoryMovement,
   },
   {
-    path: '/movement/:id',
-    component: InventoryMovement
+    path: "/movement/:id",
+    component: InventoryMovement,
   },
   {
-    path: '/product/edit/:id',
-    component: EditProductContainer
+    path: "/product/edit/:id",
+    component: EditProductContainer,
   },
   {
-    path: '/product/create',
-    component: CreateProductContainer
+    path: "/product/create",
+    component: CreateProductContainer,
+  },
+  {
+    path: "/customer",
+    component: Customer,
+  },
+  {
+    path: "/customer/create",
+    component: CreateCustomer,
+  },
+  {
+    path: "/customer/:id",
+    component: EditCustomer,
+  },
+  {
+    path: "/farm",
+    component: Farm,
+  },
+  {
+    path: "/planting/:id",
+    component: SinglePlantingPage,
   },
 ];
 
 const privateGardenerRoutes = [
   {
-    path: '/gardener-job',
-    component: GardenerJob
+    path: "/gardener-job",
+    component: GardenerJob,
   },
-
 ];
 
 const privateSalesRoutes = [
   {
-    path: '/order',
-    component: OrderContainer
+    path: "/order",
+    component: OrderContainer,
   },
   {
-    path: '/order/create',
-    component: CreateOrderContainer
+    path: "/order/create",
+    component: CreateOrderContainer,
   },
   {
-    path: '/order/edit/:id',
-    component: EditOrderContainer
+    path: "/order/edit/:id",
+    component: EditOrderContainer,
   },
   {
-    path: '/order/:id',
-    component: SingleOrderContainer
+    path: "/order/:id",
+    component: SingleOrderContainer,
   },
   {
-    path: '/inventory',
-    component: InventoryContainer
+    path: "/inventory",
+    component: InventoryContainer,
   },
   {
-    path: '/movement',
-    component: InventoryMovement
+    path: "/movement",
+    component: InventoryMovement,
   },
   {
-    path: '/movement/:id',
-    component: InventoryMovement
+    path: "/movement/:id",
+    component: InventoryMovement,
   },
   {
-    path: '/product/edit/:id',
-    component: EditProductContainer
+    path: "/product/edit/:id",
+    component: EditProductContainer,
   },
   {
-    path: '/product/create',
-    component: CreateProductContainer
+    path: "/product/create",
+    component: CreateProductContainer,
+  },
+  {
+    path: "/customer",
+    component: Customer,
+  },
+  {
+    path: "/customer/create",
+    component: CreateCustomer,
+  },
+  {
+    path: "/customer/:id",
+    component: EditCustomer,
+  },
+  {
+    path: "/farm",
+    component: Farm,
   },
 ];
 
 const publicRoutes = [
   {
-    path: '/',
-    component: HomeContainer
+    path: "/",
+    component: HomeContainer,
   },
   {
-    path: '/about-us',
-    component: AboutUsContainer
-  }
+    path: "/about-us",
+    component: AboutUsContainer,
+  },
 ];
 
-
 function App() {
-  const isAuthenticated = useSelector((state) => state.authenticated.isAuthenticated);
+  const isAuthenticated = useSelector(
+    (state) => state.authenticated.isAuthenticated
+  );
   const role = useSelector((state) => state.authenticated.role);
 
   return (
@@ -147,10 +188,45 @@ function App() {
         <NavbarContainer />
         <div>
           <Switch>
-            {isAuthenticated && role === 'admin' && privateAdminRoutes.map((el, index) => <Route key={index} exact path={el.path} component={el.component} />)}
-            {isAuthenticated && role === 'gardener' && privateGardenerRoutes.map((el, index) => <Route key={index} exact path={el.path} component={el.component} />)}
-            {isAuthenticated && role === 'sales' && privateSalesRoutes.map((el, index) => <Route key={index} exact path={el.path} component={el.component} />)}
-            {!isAuthenticated && publicRoutes.map((el, index) => <Route key={index} exact path={el.path} component={el.component} />)}
+            {isAuthenticated &&
+              role === "admin" &&
+              privateAdminRoutes.map((el, index) => (
+                <Route
+                  key={index}
+                  exact
+                  path={el.path}
+                  component={el.component}
+                />
+              ))}
+            {isAuthenticated &&
+              role === "gardener" &&
+              privateGardenerRoutes.map((el, index) => (
+                <Route
+                  key={index}
+                  exact
+                  path={el.path}
+                  component={el.component}
+                />
+              ))}
+            {isAuthenticated &&
+              role === "sales" &&
+              privateSalesRoutes.map((el, index) => (
+                <Route
+                  key={index}
+                  exact
+                  path={el.path}
+                  component={el.component}
+                />
+              ))}
+            {!isAuthenticated &&
+              publicRoutes.map((el, index) => (
+                <Route
+                  key={index}
+                  exact
+                  path={el.path}
+                  component={el.component}
+                />
+              ))}
           </Switch>
         </div>
         <FooterContainer />

@@ -38,7 +38,7 @@ function OrderContainer() {
     dispatch(setOrders(newOrders));
   };
   return (
-    <Box>
+    <Box mt="3">
       <Flex align="center" direction="column">
         <Container maxW="container.md">
           <Flex>

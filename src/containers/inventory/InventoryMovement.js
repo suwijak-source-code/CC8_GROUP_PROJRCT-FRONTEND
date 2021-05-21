@@ -2,27 +2,27 @@ import { Container, Flex, Text } from "@chakra-ui/layout";
 import axios from "../../config/axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { Table, Tbody, Td, Thead, Tr } from "@chakra-ui/table";
+import { Table, Tbody, Td, Tfoot, Thead, Tr } from "@chakra-ui/table";
 import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "../../features/Product/ProductsSlice";
 
 function InventoryMovement() {
   const params = useParams();
   const [movement, setMovement] = useState([]);
-  const products = useSelector((state) => state.products.products);
-  const dispatch = useDispatch();
+  const [products, setProducts] = useState([]);
   const fetchProducts = async () => {
-    const res = await axios.get("/product");
-    dispatch(setProducts(res.data.products));
+    const res = await axios.get("/product?productId=" + params.id);
+    setProducts(res.data.products);
   };
   useEffect(() => {
-    const fetchMovement = async () => {
-      const res = await axios.get("/orderitem/?productId=" + (params.id || ""));
-      setMovement(res.data.orderItems);
-    };
-    fetchMovement();
+    // const fetchMovement = async () => {
+    //   const res = await axios.get("/orderitem/?productId=" + (params.id || ""));
+    //   setMovement(res.data.orderItems);
+    // };
+    // fetchMovement();
     fetchProducts();
   }, []);
+  console.log(products);
   console.log(movement);
   return (
     <div>
@@ -37,27 +37,93 @@ function InventoryMovement() {
             <Thead>
               <Tr>
                 <Td>วันที่</Td>
+                <Td>InvNo.</Td>
                 <Td>สินค้า</Td>
-                <Td>ลูกค้า</Td>
-                <Td isNumeric>จำนวน</Td>
+                <Td>ลูกค้า/รายละเอียด</Td>
                 <Td isNumeric>ราคาต่อหน่วย</Td>
+                <Td isNumeric>จำนวน</Td>
                 <Td isNumeric>รวม</Td>
               </Tr>
             </Thead>
             <Tbody>
-              {movement.map((item, index) => (
+              {products.map((product, index) =>
+                product.ProductMovements.map((movement, index) =>
+                  !movement.Planting ? (
+                    <Tr>
+                      <Td>{movement.OrderItem.Order.date.slice(0, 10)}</Td>
+                      <Td>{movement.OrderItem.Order.invNo}</Td>
+                      <Td>{product.name}</Td>
+                      <Td>{movement.OrderItem.Order.name}</Td>
+                      <Td isNumeric>{+movement.price}</Td>
+                      <Td isNumeric>{+movement.quantity}</Td>
+                      <Td isNumeric>
+                        {movement.price * movement.quantity * -1}
+                      </Td>
+                    </Tr>
+                  ) : (
+                    <Tr>
+                      <Td>{movement.Planting.harvestDate.slice(0, 10)}</Td>
+                      <Td>การปลูกที่ {movement.Planting.id}</Td>
+                      <Td>{product.name}</Td>
+                      <Td>รับมาจาก {movement.Planting.Farm.name}</Td>
+                      <Td isNumeric>{+movement.price}</Td>
+                      <Td isNumeric>{+movement.quantity}</Td>
+                      <Td isNumeric>
+                        {movement.price * movement.quantity * -1}
+                      </Td>
+                    </Tr>
+                  )
+                )
+              )}
+              {/* {movement.map((item, index) => (
                 <Tr key={index}>
                   <Td>{item.Order.date.slice(0, 10)}</Td>
+                  <Td>{item.Order.invNo}</Td>
                   <Td>
-                    {products[item.productId] && products[item.productId].name}
+                    {
+                      products.find((product) => product.id === item.productId)
+                        .name
+                    }
                   </Td>
                   <Td>{item.Order.name}</Td>
                   <Td isNumeric>{+item.quantity}</Td>
                   <Td isNumeric>{+item.price}</Td>
                   <Td isNumeric>{+item.price * item.quantity}</Td>
                 </Tr>
-              ))}
+              ))} */}
             </Tbody>
+            <Tfoot>
+              <Tr>
+                <Td></Td>
+                <Td></Td>
+                <Td></Td>
+                <Td></Td>
+                <Td isNumeric fontWeight="semibold">
+                  รวม
+                </Td>
+                <Td isNumeric fontWeight="semibold">
+                  {products.reduce(
+                    (total, { ProductMovements }) =>
+                      (total += ProductMovements.reduce(
+                        (acc, { quantity }) => (acc += +quantity),
+                        0
+                      )),
+                    0
+                  )}
+                </Td>
+                <Td isNumeric fontWeight="semibold">
+                  {products.reduce(
+                    (total, { ProductMovements }) =>
+                      (total += ProductMovements.reduce(
+                        (acc, { price, quantity }) =>
+                          (acc += price * quantity * -1),
+                        0
+                      )),
+                    0
+                  )}
+                </Td>
+              </Tr>
+            </Tfoot>
           </Table>
         </Container>
       </Flex>
