@@ -66,7 +66,12 @@ function InventoryContainer() {
                       <Td>{item.id}</Td>
                       <Td>{item.name}</Td>
                       <Td isNumeric>{item.price}</Td>
-                      <Td isNumeric>xxx</Td>
+                      <Td isNumeric>
+                        {item.ProductMovements.reduce(
+                          (acc, { quantity }) => (acc += +quantity),
+                          0
+                        )}
+                      </Td>
                       <Td m="1" p="1">
                         <Text
                           onClick={() =>
