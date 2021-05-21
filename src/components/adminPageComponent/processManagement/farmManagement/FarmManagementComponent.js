@@ -1,33 +1,35 @@
 import "./FarmManagementComponent.css"
 import { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import axios from '../../../../config/axios';
 import { useSelector, useDispatch } from "react-redux";
-import { setFarmManagement, setSeedManagement, setPlantingManagement } from "../../../../features/ProcessManagement/ProcessManagementSlice";
+import {
+    setFarmManagement, setSeedManagement, setPlantingManagement, setEachFarm,
+    setAllFarm, setInProgressFarm, setIdleFarm, setFarmOpenAddPlanting
+} from "../../../../features/ProcessManagement/ProcessManagementSlice";
 import { setCurrentPage, setPageNumber } from "../../../../features/Paginate/PaginateSlice";
 import { Icon, Button, Box, Flex, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Input, Link } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import AddFarmComponent from "../addFarm/AddFarmComponent";
 import EditFarmComponent from '../editFarm/EditFarmComponent';
-import AddPlantingComponent from '../addPlanting/AddPlantingComponent';
-
 
 
 const FarmManagementComponent = () => {
     const [openPopupAdd, setOpenPopupAdd] = useState(false);
     const [openPopupEdit, setOpenPopupEdit] = useState(false);
-    const [openPopupCreatePlanting, setOpenPopupCreatePlanting] = useState(false);
-    const [all, setAll] = useState(true);
-    const [inProgress, setInProgress] = useState(false);
-    const [idle, setIdle] = useState(false);
     const [farmList, setFarmList] = useState([]);
-    const [eachFarm, setEachFarm] = useState({});
     const [error, setError] = useState({});
     const [search, setSearch] = useState('');
 
+    const history = useHistory();
     const dispatch = useDispatch();
     const currentPage = useSelector((state) => state.paginate.currentPage);
     const listPerPage = useSelector((state) => state.paginate.listPerPage);
     const pageNumber = useSelector((state) => state.paginate.pageNumber);
+    const eachFarm = useSelector((state) => state.processManagement.eachFarm);
+    const all = useSelector((state) => state.processManagement.allFarm);
+    const inProgress = useSelector((state) => state.processManagement.inProgressFarm);
+    const idle = useSelector((state) => state.processManagement.idleFarm);
 
     useEffect(() => {
         const fetchFarmList = async () => {
@@ -61,9 +63,9 @@ const FarmManagementComponent = () => {
     const handleAll = async (e) => {
         try {
             e.preventDefault();
-            setAll(true);
-            setInProgress(false);
-            setIdle(false);
+            dispatch(setAllFarm(true));
+            dispatch(setInProgressFarm(false));
+            dispatch(setIdleFarm(false));
             const res = await axios.get(`/farms/${'all'}`);
             setFarmList(res.data.farm);
             if (res.data.farm && res.data.farm.length > 0) {
@@ -90,9 +92,9 @@ const FarmManagementComponent = () => {
     const handleInProgress = async (e) => {
         try {
             e.preventDefault();
-            setAll(false);
-            setInProgress(true);
-            setIdle(false);
+            dispatch(setAllFarm(false));
+            dispatch(setInProgressFarm(true));
+            dispatch(setIdleFarm(false));
             const res = await axios.get(`/farms/${'active'}`);
             setFarmList(res.data.farm);
             if (res.data.farm && res.data.farm.length > 0) {
@@ -120,9 +122,9 @@ const FarmManagementComponent = () => {
     const handleIdle = async (e) => {
         try {
             e.preventDefault();
-            setAll(false);
-            setInProgress(false);
-            setIdle(true);
+            dispatch(setAllFarm(false));
+            dispatch(setInProgressFarm(false));
+            dispatch(setIdleFarm(true));
             const res = await axios.get(`/farms/${'idle'}`);
             setFarmList(res.data.farm);
             if (res.data.farm && res.data.farm.length > 0) {
@@ -157,9 +159,9 @@ const FarmManagementComponent = () => {
                 dispatch(setFarmManagement(true));
                 dispatch(setSeedManagement(false));
                 dispatch(setPlantingManagement(false));
-                setAll(true);
-                setInProgress(false);
-                setIdle(false);
+                dispatch(setAllFarm(true));
+                dispatch(setInProgressFarm(false));
+                dispatch(setIdleFarm(false));
                 const res = await axios.get(`/farms/${'all'}`);
                 setFarmList(res.data.farm);
                 if (res.data.farm && res.data.farm.length > 0) {
@@ -191,9 +193,9 @@ const FarmManagementComponent = () => {
             dispatch(setFarmManagement(true));
             dispatch(setSeedManagement(false));
             dispatch(setPlantingManagement(false));
-            setAll(true);
-            setInProgress(false);
-            setIdle(false);
+            dispatch(setAllFarm(true));
+            dispatch(setInProgressFarm(false));
+            dispatch(setIdleFarm(false));
             const res = await axios.get(`/farms/search?search=${search}`);
             setFarmList(res.data.farm);
             if (res.data.farm && res.data.farm.length > 0) {
@@ -224,13 +226,14 @@ const FarmManagementComponent = () => {
 
     const handleCreate = (item, e) => {
         e.preventDefault();
-        setEachFarm(item);
-        setOpenPopupCreatePlanting(true);
+        dispatch(setEachFarm(item));
+        history.push('/process-management/add-planting');
+        dispatch(setFarmOpenAddPlanting(true));
     };
 
     const handleOpenEdit = (item, e) => {
         e.preventDefault();
-        setEachFarm(item);
+        dispatch(setEachFarm(item));
         setOpenPopupEdit(true);
     };
 
@@ -240,9 +243,9 @@ const FarmManagementComponent = () => {
             dispatch(setFarmManagement(true));
             dispatch(setSeedManagement(false));
             dispatch(setPlantingManagement(false));
-            setAll(true);
-            setInProgress(false);
-            setIdle(false);
+            dispatch(setAllFarm(true));
+            dispatch(setInProgressFarm(false));
+            dispatch(setIdleFarm(false));
             const res = await axios.get(`/farms/${'all'}`);
             setFarmList(res.data.farm);
             if (res.data.farm && res.data.farm.length > 0) {
@@ -440,11 +443,8 @@ const FarmManagementComponent = () => {
                     </Flex>
                 </Box>
             </Flex>)}
-            {openPopupAdd && <AddFarmComponent setOpenPopupAdd={setOpenPopupAdd} setFarmList={setFarmList}
-                setAll={setAll} setIdle={setIdle} setInProgress={setInProgress} />}
-            {openPopupEdit && <EditFarmComponent setOpenPopupEdit={setOpenPopupEdit} eachFarm={eachFarm} setFarmList={setFarmList}
-                setAll={setAll} setIdle={setIdle} setInProgress={setInProgress} setFarmList={setFarmList} />}
-            {openPopupCreatePlanting && <AddPlantingComponent setOpenPopupCreatePlanting={setOpenPopupCreatePlanting} eachFarm={eachFarm} />}
+            {openPopupAdd && <AddFarmComponent setOpenPopupAdd={setOpenPopupAdd} setFarmList={setFarmList} />}
+            {openPopupEdit && <EditFarmComponent setOpenPopupEdit={setOpenPopupEdit} setFarmList={setFarmList} />}
             <Flex justifyContent="center" my="5">
                 {pageNumber.map((numbers, index) =>
                     <Link key={index} mx="1" onClick={(e) => paginate(numbers, e)}>

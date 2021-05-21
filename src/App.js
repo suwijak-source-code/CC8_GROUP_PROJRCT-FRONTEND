@@ -18,11 +18,21 @@ import CreateProductContainer from "./containers/inventory/CreateProductContaine
 import InventoryMovement from "./containers/inventory/InventoryMovement";
 import HomeContainer from "./containers/home/home";
 import AboutUsContainer from "./containers/aboutUs/aboutUs";
+import AddPlanting from "./components/adminPageComponent/processManagement/addPlanting/AddPlantingComponent";
+import EditPlanting from "./components/adminPageComponent/processManagement/editPlanting/EditPlantingComponent";
 
 const privateAdminRoutes = [
   {
     path: '/process-management',
     component: ProcessManagement
+  },
+  {
+    path: '/process-management/add-planting',
+    component: AddPlanting
+  },
+  {
+    path: '/process-management/edit-planting',
+    component: EditPlanting
   },
   {
     path: '/employees-management',

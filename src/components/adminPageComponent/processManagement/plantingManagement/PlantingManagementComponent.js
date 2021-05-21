@@ -1,40 +1,41 @@
 import "./PlantingManagementComponent.css"
 import { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Icon, Button, Box, Flex, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Input, Link } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import axios from '../../../../config/axios';
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentPage, setPageNumber } from "../../../../features/Paginate/PaginateSlice";
-import AddPlantingComponent from '../addPlanting/AddPlantingComponent';
-import EditPlantingComponent from '../editPlanting/EditPlantingComponent';
-import { setFarmManagement, setSeedManagement, setPlantingManagement } from "../../../../features/ProcessManagement/ProcessManagementSlice";
+import {
+    setFarmManagement, setSeedManagement, setPlantingManagement, setAllPlanting, setInProgressPlanting,
+    setHarvestPlanting, setFinishPlanting, setCancelPlanting, setEachPlanting,
+    setPlantingList
+} from "../../../../features/ProcessManagement/ProcessManagementSlice";
 import EditPlantingAmountComponent from '../editPlantingAmount/EditPlantingAmountComponent';
 
 
 const PlantingManagementComponent = () => {
-    const [openPopupAdd, setOpenPopupAdd] = useState(false);
-    const [openPopupEdit, setOpenPopupEdit] = useState(false);
     const [editAmount, setEditAmount] = useState(false);
-    const [all, setAll] = useState(true);
-    const [inProgress, setInProgress] = useState(false);
-    const [harvest, setHarvest] = useState(false);
-    const [finish, setFinish] = useState(false);
-    const [cancel, setCancel] = useState(false);
     const [error, setError] = useState({});
-    const [plantingList, setPlantingList] = useState([]);
-    const [eachPlanting, setEachPlanting] = useState([]);
     const [search, setSearch] = useState('');
 
+    const history = useHistory();
     const dispatch = useDispatch();
     const currentPage = useSelector((state) => state.paginate.currentPage);
     const listPerPage = useSelector((state) => state.paginate.listPerPage);
     const pageNumber = useSelector((state) => state.paginate.pageNumber);
+    const all = useSelector((state) => state.processManagement.allPlanting);
+    const inProgress = useSelector((state) => state.processManagement.inProgressPlanting);
+    const harvest = useSelector((state) => state.processManagement.harvestPlanting);
+    const finish = useSelector((state) => state.processManagement.finishPlanting);
+    const cancel = useSelector((state) => state.processManagement.cancelPlanting);
+    const plantingList = useSelector((state) => state.processManagement.plantingList);
 
     useEffect(() => {
         const fetchPlantingList = async () => {
             try {
                 const res = await axios.get(`/plantings/${'all'}`);
-                setPlantingList(res.data.planting);
+                dispatch(setPlantingList(res.data.planting));
                 if (res.data.planting && res.data.planting.length > 0) {
                     dispatch(setCurrentPage(1));
                     const pageNumberTmp = [];
@@ -61,13 +62,13 @@ const PlantingManagementComponent = () => {
     const handleAll = async (e) => {
         try {
             e.preventDefault();
-            setAll(true);
-            setInProgress(false);
-            setHarvest(false);
-            setFinish(false);
-            setCancel(false);
+            dispatch(setAllPlanting(true));
+            dispatch(setInProgressPlanting(false));
+            dispatch(setHarvestPlanting(false));
+            dispatch(setFinishPlanting(false));
+            dispatch(setCancelPlanting(false));
             const res = await axios.get(`/plantings/${'all'}`);
-            setPlantingList(res.data.planting);
+            dispatch(setPlantingList(res.data.planting));
             if (res.data.planting && res.data.planting.length > 0) {
                 dispatch(setCurrentPage(1));
                 const pageNumberTmp = [];
@@ -92,13 +93,13 @@ const PlantingManagementComponent = () => {
     const handleInProgress = async (e) => {
         try {
             e.preventDefault();
-            setAll(false);
-            setInProgress(true);
-            setHarvest(false);
-            setFinish(false);
-            setCancel(false);
+            dispatch(setAllPlanting(false));
+            dispatch(setInProgressPlanting(true));
+            dispatch(setHarvestPlanting(false));
+            dispatch(setFinishPlanting(false));
+            dispatch(setCancelPlanting(false));
             const res = await axios.get(`/plantings/${'started'}`);
-            setPlantingList(res.data.planting);
+            dispatch(setPlantingList(res.data.planting));
             if (res.data.planting && res.data.planting.length > 0) {
                 dispatch(setCurrentPage(1));
                 const pageNumberTmp = [];
@@ -123,13 +124,13 @@ const PlantingManagementComponent = () => {
     const handleHarvest = async (e) => {
         try {
             e.preventDefault();
-            setAll(false);
-            setInProgress(false);
-            setHarvest(true);
-            setFinish(false);
-            setCancel(false);
+            dispatch(setAllPlanting(false));
+            dispatch(setInProgressPlanting(false));
+            dispatch(setHarvestPlanting(true));
+            dispatch(setFinishPlanting(false));
+            dispatch(setCancelPlanting(false));
             const res = await axios.get(`/plantings/${'harvested'}`);
-            setPlantingList(res.data.planting);
+            dispatch(setPlantingList(res.data.planting));
             if (res.data.planting && res.data.planting.length > 0) {
                 dispatch(setCurrentPage(1));
                 const pageNumberTmp = [];
@@ -154,13 +155,13 @@ const PlantingManagementComponent = () => {
     const handleFinish = async (e) => {
         try {
             e.preventDefault();
-            setAll(false);
-            setInProgress(false);
-            setHarvest(false);
-            setFinish(true);
-            setCancel(false);
+            dispatch(setAllPlanting(false));
+            dispatch(setInProgressPlanting(false));
+            dispatch(setHarvestPlanting(false));
+            dispatch(setFinishPlanting(true));
+            dispatch(setCancelPlanting(false));
             const res = await axios.get(`/plantings/${'finished'}`);
-            setPlantingList(res.data.planting);
+            dispatch(setPlantingList(res.data.planting));
             if (res.data.planting && res.data.planting.length > 0) {
                 dispatch(setCurrentPage(1));
                 const pageNumberTmp = [];
@@ -185,13 +186,13 @@ const PlantingManagementComponent = () => {
     const handleCancel = async (e) => {
         try {
             e.preventDefault();
-            setAll(false);
-            setInProgress(false);
-            setHarvest(false);
-            setFinish(true);
-            setCancel(false);
+            dispatch(setAllPlanting(false));
+            dispatch(setInProgressPlanting(false));
+            dispatch(setHarvestPlanting(false));
+            dispatch(setFinishPlanting(false));
+            dispatch(setCancelPlanting(true));
             const res = await axios.get(`/plantings/${'cancel'}`);
-            setPlantingList(res.data.planting);
+            dispatch(setPlantingList(res.data.planting));
             if (res.data.planting && res.data.planting.length > 0) {
                 dispatch(setCurrentPage(1));
                 const pageNumberTmp = [];
@@ -220,13 +221,13 @@ const PlantingManagementComponent = () => {
                 setSearch(value);
             } else {
                 e.preventDefault();
-                setAll(true);
-                setInProgress(false);
-                setHarvest(false);
-                setFinish(false);
-                setCancel(false);
+                dispatch(setAllPlanting(true));
+                dispatch(setInProgressPlanting(false));
+                dispatch(setHarvestPlanting(false));
+                dispatch(setFinishPlanting(false));
+                dispatch(setCancelPlanting(false));
                 const res = await axios.get(`/plantings/${'all'}`);
-                setPlantingList(res.data.planting);
+                dispatch(setPlantingList(res.data.planting));
                 if (res.data.planting && res.data.planting.length > 0) {
                     dispatch(setCurrentPage(1));
                     const pageNumberTmp = [];
@@ -253,13 +254,13 @@ const PlantingManagementComponent = () => {
     const handleSearch = async (e) => {
         try {
             e.preventDefault();
-            setAll(true);
-            setInProgress(false);
-            setHarvest(false);
-            setFinish(false);
-            setCancel(false);
+            dispatch(setAllPlanting(true));
+            dispatch(setInProgressPlanting(false));
+            dispatch(setHarvestPlanting(false));
+            dispatch(setFinishPlanting(false));
+            dispatch(setCancelPlanting(false));
             const res = await axios.get(`/plantings/search?search=${search}`);
-            setPlantingList(res.data.planting);
+            dispatch(setPlantingList(res.data.planting));
             if (res.data.planting && res.data.planting.length > 0) {
                 dispatch(setCurrentPage(1));
                 const pageNumberTmp = [];
@@ -283,18 +284,18 @@ const PlantingManagementComponent = () => {
 
     const handleOpenPopupAdd = (e) => {
         e.preventDefault();
-        setOpenPopupAdd(true);
+        history.push('/process-management/add-planting');
     };
 
     const handleOpenEdit = (item, e) => {
         e.preventDefault();
-        setEachPlanting(item);
-        setOpenPopupEdit(true);
+        dispatch(setEachPlanting(item));
+        history.push('/process-management/edit-planting');
     };
 
     const handleOpenEditAmount = (item, e) => {
         e.preventDefault();
-        setEachPlanting(item);
+        dispatch(setEachPlanting(item));
         setEditAmount(true);
     };
 
@@ -304,13 +305,13 @@ const PlantingManagementComponent = () => {
             dispatch(setFarmManagement(false));
             dispatch(setSeedManagement(false));
             dispatch(setPlantingManagement(true));
-            setAll(true);
-            setInProgress(false);
-            setHarvest(false);
-            setFinish(false);
-            setCancel(false);
+            dispatch(setAllPlanting(true));
+            dispatch(setInProgressPlanting(false));
+            dispatch(setHarvestPlanting(false));
+            dispatch(setFinishPlanting(false));
+            dispatch(setCancelPlanting(false));
             const res = await axios.get(`/plantings/${'all'}`);
-            setPlantingList(res.data.planting);
+            dispatch(setPlantingList(res.data.planting));
             if (res.data.planting && res.data.planting.length > 0) {
                 dispatch(setCurrentPage(1));
                 const pageNumberTmp = [];
@@ -340,8 +341,6 @@ const PlantingManagementComponent = () => {
         e.preventDefault();
         dispatch(setCurrentPage(numbers));
     };
-
-    console.log(plantingList);
 
     return (
         <Box>
@@ -889,14 +888,7 @@ const PlantingManagementComponent = () => {
                     </Flex>
                 </Box>
             </Flex>)}
-            {openPopupAdd && <AddPlantingComponent setOpenPopupAdd={setOpenPopupAdd} setPlantingList={setPlantingList}
-                setAll={setAll} setInProgress={setInProgress} setHarvest={setHarvest} setFinish={setFinish} setCancel={setCancel} />}
-            {openPopupEdit && <EditPlantingComponent eachPlanting={eachPlanting} setOpenPopupEdit={setOpenPopupEdit}
-                setPlantingList={setPlantingList} setAll={setAll} setInProgress={setInProgress} setHarvest={setHarvest}
-                setFinish={setFinish} setCancel={setCancel} />}
-            {editAmount && <EditPlantingAmountComponent eachPlanting={eachPlanting} setEditAmount={setEditAmount}
-                setPlantingList={setPlantingList} setAll={setAll} setInProgress={setInProgress} setHarvest={setHarvest}
-                setFinish={setFinish} setCancel={setCancel} />}
+            {editAmount && <EditPlantingAmountComponent setEditAmount={setEditAmount} />}
             <Flex justifyContent="center" my="5">
                 {pageNumber.map((numbers, index) =>
                     <Link key={index} mx="1" onClick={(e) => paginate(numbers, e)}>

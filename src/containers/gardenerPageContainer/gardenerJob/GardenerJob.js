@@ -26,12 +26,12 @@ const GardenerJob = () => {
         const fetchGardenerJob = async () => {
             try {
                 const res = await axios.get(`/jobs/by-user/${'all'}`);
-                setGardenerJob(res.data.job);
-                const job = res.data.job.map((item) => {
+                const job = res.data.job.filter((item) => {
                     if (item.assignDate === `${(new Date().getFullYear())}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + (new Date().getDate())).slice(-2)}`) {
                         return item;
                     }
                 });
+                setGardenerJob(job);
                 if (job && job.length > 0) {
                     dispatch(setCurrentPage(1));
                     const pageNumberTmp = [];
@@ -58,18 +58,13 @@ const GardenerJob = () => {
     const handleAll = async (e) => {
         try {
             e.preventDefault();
-            setAll(true);
-            setAssign(false);
-            setInProgress(false);
-            setChecking(false);
-            setSuccess(false);
             const res = await axios.get(`/jobs/by-user/${'all'}`);
-            setGardenerJob(res.data.job);
-            const job = res.data.job.map((item) => {
+            const job = res.data.job.filter((item) => {
                 if (item.assignDate === `${(new Date().getFullYear())}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + (new Date().getDate())).slice(-2)}`) {
                     return item;
                 }
             });
+            setGardenerJob(job);
             if (job && job.length > 0) {
                 dispatch(setCurrentPage(1));
                 const pageNumberTmp = [];
@@ -82,6 +77,11 @@ const GardenerJob = () => {
                 };
                 dispatch(setPageNumber(pageNumberTmp));
             };
+            setAll(true);
+            setAssign(false);
+            setInProgress(false);
+            setChecking(false);
+            setSuccess(false);
         } catch (err) {
             if (err.response) {
                 setError({ server: err.response.data.message });
@@ -89,24 +89,18 @@ const GardenerJob = () => {
                 setError({ front: err.message });
             }
         }
-
     };
 
     const handleAssign = async (e) => {
         try {
             e.preventDefault();
-            setAll(false);
-            setAssign(true);
-            setInProgress(false);
-            setChecking(false);
-            setSuccess(false);
             const res = await axios.get(`/jobs/by-user/${'assign'}`);
-            setGardenerJob(res.data.job);
-            const job = res.data.job.map((item) => {
+            const job = res.data.job.filter((item) => {
                 if (item.assignDate === `${(new Date().getFullYear())}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + (new Date().getDate())).slice(-2)}`) {
                     return item;
                 }
             });
+            setGardenerJob(job);
             if (job && job.length > 0) {
                 dispatch(setCurrentPage(1));
                 const pageNumberTmp = [];
@@ -119,6 +113,11 @@ const GardenerJob = () => {
                 };
                 dispatch(setPageNumber(pageNumberTmp));
             };
+            setAll(false);
+            setAssign(true);
+            setInProgress(false);
+            setChecking(false);
+            setSuccess(false);
         } catch (err) {
             if (err.response) {
                 setError({ server: err.response.data.message });
@@ -132,18 +131,13 @@ const GardenerJob = () => {
     const handleInProgress = async (e) => {
         try {
             e.preventDefault();
-            setAll(false);
-            setAssign(false);
-            setInProgress(true);
-            setChecking(false);
-            setSuccess(false);
             const res = await axios.get(`/jobs/by-user/${'in progress'}`);
-            setGardenerJob(res.data.job);
-            const job = res.data.job.map((item) => {
+            const job = res.data.job.filter((item) => {
                 if (item.assignDate === `${(new Date().getFullYear())}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + (new Date().getDate())).slice(-2)}`) {
                     return item;
                 }
             });
+            setGardenerJob(job);
             if (job && job.length > 0) {
                 dispatch(setCurrentPage(1));
                 const pageNumberTmp = [];
@@ -156,6 +150,11 @@ const GardenerJob = () => {
                 };
                 dispatch(setPageNumber(pageNumberTmp));
             };
+            setAll(false);
+            setAssign(false);
+            setInProgress(true);
+            setChecking(false);
+            setSuccess(false);
         } catch (err) {
             if (err.response) {
                 setError({ server: err.response.data.message });
@@ -169,18 +168,13 @@ const GardenerJob = () => {
     const handleChecking = async (e) => {
         try {
             e.preventDefault();
-            setAll(false);
-            setAssign(false);
-            setInProgress(false);
-            setChecking(true);
-            setSuccess(false);
             const res = await axios.get(`/jobs/by-user/${'checking'}`);
-            setGardenerJob(res.data.job);
-            const job = res.data.job.map((item) => {
+            const job = res.data.job.filter((item) => {
                 if (item.assignDate === `${(new Date().getFullYear())}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + (new Date().getDate())).slice(-2)}`) {
                     return item;
                 }
             });
+            setGardenerJob(job);
             if (job && job.length > 0) {
                 dispatch(setCurrentPage(1));
                 const pageNumberTmp = [];
@@ -193,6 +187,11 @@ const GardenerJob = () => {
                 };
                 dispatch(setPageNumber(pageNumberTmp));
             };
+            setAll(false);
+            setAssign(false);
+            setInProgress(false);
+            setChecking(true);
+            setSuccess(false);
         } catch (err) {
             if (err.response) {
                 setError({ server: err.response.data.message });
@@ -205,18 +204,13 @@ const GardenerJob = () => {
     const handleSuccess = async (e) => {
         try {
             e.preventDefault();
-            setAll(false);
-            setAssign(false);
-            setInProgress(false);
-            setChecking(false);
-            setSuccess(true);
             const res = await axios.get(`/jobs/by-user/${'finish'}`);
-            setGardenerJob(res.data.job);
-            const job = res.data.job.map((item) => {
+            const job = res.data.job.filter((item) => {
                 if (item.assignDate === `${(new Date().getFullYear())}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + (new Date().getDate())).slice(-2)}`) {
                     return item;
                 }
             });
+            setGardenerJob(job);
             if (job && job.length > 0) {
                 dispatch(setCurrentPage(1));
                 const pageNumberTmp = [];
@@ -229,6 +223,11 @@ const GardenerJob = () => {
                 };
                 dispatch(setPageNumber(pageNumberTmp));
             };
+            setAll(false);
+            setAssign(false);
+            setInProgress(false);
+            setChecking(false);
+            setSuccess(true);
         } catch (err) {
             if (err.response) {
                 setError({ server: err.response.data.message });
@@ -246,6 +245,8 @@ const GardenerJob = () => {
         e.preventDefault();
         dispatch(setCurrentPage(numbers));
     };
+    console.log(gardenerJob)
+
     return (
         <Box>
             <Box my="5" px="40">
@@ -276,35 +277,15 @@ const GardenerJob = () => {
                 </Flex>
                 <Box my="4"><hr /></Box>
 
-                {all && currentGardenerJob.map((item, index) => {
-                    if (item.assignDate === `${(new Date().getFullYear())}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + (new Date().getDate())).slice(-2)}`) {
-                        return <GardenerJobListComponent key={index} item={item} />
-                    }
-                })}
+                {all && currentGardenerJob.map((item, index) => <GardenerJobListComponent key={index} item={item} />)}
 
-                {assign && currentGardenerJob.map((item, index) => {
-                    if (item.assignDate === `${(new Date().getFullYear())}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + (new Date().getDate())).slice(-2)}`) {
-                        return <GardenerJobListComponent key={index} item={item} />
-                    }
-                })}
+                {assign && currentGardenerJob.map((item, index) => <GardenerJobListComponent key={index} item={item} />)}
 
-                {inProgress && currentGardenerJob.map((item, index) => {
-                    if (item.assignDate === `${(new Date().getFullYear())}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + (new Date().getDate())).slice(-2)}`) {
-                        return <GardenerJobListComponent key={index} item={item} />
-                    }
-                })}
+                {inProgress && currentGardenerJob.map((item, index) => <GardenerJobListComponent key={index} item={item} />)}
 
-                {checking && currentGardenerJob.map((item, index) => {
-                    if (item.assignDate === `${(new Date().getFullYear())}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + (new Date().getDate())).slice(-2)}`) {
-                        return <GardenerJobListComponent key={index} item={item} />
-                    }
-                })}
+                {checking && currentGardenerJob.map((item, index) => <GardenerJobListComponent key={index} item={item} />)}
 
-                {success && currentGardenerJob.map((item, index) => {
-                    if (item.assignDate === `${(new Date().getFullYear())}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + (new Date().getDate())).slice(-2)}`) {
-                        return <GardenerJobListComponent key={index} item={item} />
-                    }
-                })}
+                {success && currentGardenerJob.map((item, index) => <GardenerJobListComponent key={index} item={item} />)}
 
                 <Flex justifyContent="center" my="5">
                     {pageNumber.map((numbers, index) =>

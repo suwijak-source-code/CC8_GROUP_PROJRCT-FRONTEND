@@ -1,15 +1,12 @@
-import { Link } from "@chakra-ui/react";
+import { Box, Image } from "@chakra-ui/react";
 
 
 
 const LogoComponent = () => {
     return (
-        <>
-
-            <h1>Farm Management</h1>
-
-
-        </>
+        <Box>
+            <Image height="27px" src="logo/logoFarm.png" alt="logo" />
+        </Box>
     )
 }
 

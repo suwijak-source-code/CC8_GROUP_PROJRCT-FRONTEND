@@ -12,7 +12,7 @@ import { useHistory } from 'react-router-dom';
 const FinishWorkComponent = ({ setOpenFinish }) => {
     const [finish, setFinish] = useState({
         mission: '', farmName: '', harvestedAmount: ''
-    })
+    });
     const [error, setError] = useState({});
 
     const history = useHistory();
@@ -100,6 +100,7 @@ const FinishWorkComponent = ({ setOpenFinish }) => {
                                         <NumberDecrementStepper />
                                     </NumberInputStepper>
                                 </NumberInput>
+                                {error.harvestedAmount && <Box as="span" textAlign="center" color="#E53E3E">{error.harvestedAmount}</Box>}
                             </Flex>
                         </FormControl>
                         <Box my="5">
