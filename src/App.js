@@ -23,11 +23,22 @@ import CreateCustomer from "./containers/customer/CreateCustomer";
 import EditCustomer from "./containers/customer/EditCustomer";
 import Farm from "./containers/farm(Nat)/Farm";
 import SinglePlantingPage from "./containers/farm(Nat)/SinglePlantingPage";
+import AddPlanting from "./components/adminPageComponent/processManagement/addPlanting/AddPlantingComponent";
+import EditPlanting from "./components/adminPageComponent/processManagement/editPlanting/EditPlantingComponent";
 
 const privateAdminRoutes = [
   {
     path: "/process-management",
     component: ProcessManagement,
+  },
+  {
+    path: "/employees-management",
+    component: EmployeesManagement,
+  },
+  { path: "/process-management/add-planting", component: AddPlanting },
+  {
+    path: "/process-management/edit-planting",
+    component: EditPlanting,
   },
   {
     path: "/employees-management",

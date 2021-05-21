@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { useHistory } from 'react-router-dom';
 import { Flex, FormControl, FormLabel, Input, Box, Button, Textarea, Select } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
-import { setFarmManagement, setSeedManagement, setPlantingManagement } from "../../../../features/ProcessManagement/ProcessManagementSlice";
+import { setFarmManagement, setSeedManagement, setPlantingManagement, setAllFarm, setInProgressFarm, setIdleFarm } from "../../../../features/ProcessManagement/ProcessManagementSlice";
 import { setCurrentPage, setPageNumber } from "../../../../features/Paginate/PaginateSlice";
 
 
-const EditFarmComponent = ({ setOpenPopupEdit, eachFarm, setAll, setInProgress, setIdle, setFarmList }) => {
+const EditFarmComponent = ({ setOpenPopupEdit, setFarmList }) => {
     const [editFarm, setEditFarm] = useState({
         farmName: '', farmApprovedFName: '', farmApprovedLName: '', farmRemark: '', status: ''
     });
@@ -17,6 +17,7 @@ const EditFarmComponent = ({ setOpenPopupEdit, eachFarm, setAll, setInProgress, 
     const history = useHistory();
     const dispatch = useDispatch();
     const listPerPage = useSelector((state) => state.paginate.listPerPage);
+    const eachFarm = useSelector((state) => state.processManagement.eachFarm);
 
     useEffect(() => {
         setEditFarm({
@@ -51,9 +52,9 @@ const EditFarmComponent = ({ setOpenPopupEdit, eachFarm, setAll, setInProgress, 
             dispatch(setFarmManagement(true));
             dispatch(setSeedManagement(false));
             dispatch(setPlantingManagement(false));
-            setAll(true);
-            setInProgress(false);
-            setIdle(false);
+            dispatch(setAllFarm(true));
+            dispatch(setInProgressFarm(false));
+            dispatch(setIdleFarm(false));
             const res = await axios.get(`/farms/${'all'}`);
             setFarmList(res.data.farm);
             if (res.data.farm && res.data.farm.length > 0) {
@@ -107,6 +108,7 @@ const EditFarmComponent = ({ setOpenPopupEdit, eachFarm, setAll, setInProgress, 
                                 <FormLabel my="3">ชื่อสวน:</FormLabel>
                                 <Input name="farmName" value={editFarm.farmName} placeholder="ชื่อสวน"
                                     onChange={handleInputChange} />
+                                {error.farmName && <Box as="span" textAlign="center" color="#E53E3E">{error.farmName}</Box>}
                             </Flex>
                             <Flex flexFlow="column wrap">
                                 <FormLabel my="3">สถานะ:</FormLabel>
@@ -118,6 +120,7 @@ const EditFarmComponent = ({ setOpenPopupEdit, eachFarm, setAll, setInProgress, 
                                     {!editFarm.status && <option value="idle">ว่าง</option>}
                                     {!editFarm.status && <option value="active">กำลังดำเนินการ</option>}
                                 </Select>
+                                {error.status && <Box as="span" textAlign="center" color="#E53E3E">{error.status}</Box>}
                             </Flex>
                             <Flex flexFlow="column wrap">
                                 <FormLabel my="3">ชื่อ-นามสกุล ผู้อนุมัติ:</FormLabel>
@@ -125,10 +128,12 @@ const EditFarmComponent = ({ setOpenPopupEdit, eachFarm, setAll, setInProgress, 
                                     <Box>
                                         <Input name="farmApprovedFName" value={editFarm.farmApprovedFName} placeholder="ชื่อ"
                                             onChange={handleInputChange} />
+                                        {error.farmApprovedFName && <Box as="span" textAlign="center" color="#E53E3E">{error.farmApprovedFName}</Box>}
                                     </Box>
                                     <Box>
                                         <Input name="farmApprovedLName" value={editFarm.farmApprovedLName} placeholder="นามสกุล"
                                             onChange={handleInputChange} />
+                                        {error.farmApprovedLName && <Box as="span" textAlign="center" color="#E53E3E">{error.farmApprovedLName}</Box>}
                                     </Box>
                                 </Flex>
                             </Flex>

@@ -16,6 +16,9 @@
 .nav-logo, .nav-link{
     margin: 0px 20px 0px 20px;
     color: #FFFFFF;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
 }
 
 .nav-container-button{

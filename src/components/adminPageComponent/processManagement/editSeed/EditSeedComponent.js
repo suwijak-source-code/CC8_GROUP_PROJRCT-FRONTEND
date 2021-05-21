@@ -120,6 +120,7 @@ const EditSeedComponent = ({ setOpenPopupEdit, eachSeed, setSeedList }) => {
                                 <FormLabel my="3">ชื่อเมล็ดพันธุ์:</FormLabel>
                                 <Input name="seedName" value={editSeed.seedName} placeholder="ชื่อเมล็ดพันธุ์"
                                     onChange={handleInputChange} />
+                                {error.seedName && <Box as="span" textAlign="center" color="#E53E3E">{error.seedName}</Box>}
                             </Flex>
                             <Flex flexFlow="column wrap">
                                 <FormLabel my="3">ระยะเวลาปลูก:</FormLabel>
@@ -131,6 +132,7 @@ const EditSeedComponent = ({ setOpenPopupEdit, eachSeed, setSeedList }) => {
                                         <NumberDecrementStepper />
                                     </NumberInputStepper>
                                 </NumberInput>
+                                {error.plantingTime && <Box as="span" textAlign="center" color="#E53E3E">{error.plantingTime}</Box>}
                             </Flex>
                             <Flex flexFlow="column wrap">
                                 <FormLabel my="3">ราคาเมล็ดพันธุ์:</FormLabel>
@@ -142,6 +144,7 @@ const EditSeedComponent = ({ setOpenPopupEdit, eachSeed, setSeedList }) => {
                                         <NumberDecrementStepper />
                                     </NumberInputStepper>
                                 </NumberInput>
+                                {error.seedCost && <Box as="span" textAlign="center" color="#E53E3E">{error.seedCost}</Box>}
                             </Flex>
                             <Flex flexFlow="column wrap">
                                 <FormLabel my="3">ชื่อ-นามสกุล ผู้อนุมัติ:</FormLabel>
@@ -149,10 +152,12 @@ const EditSeedComponent = ({ setOpenPopupEdit, eachSeed, setSeedList }) => {
                                     <Box>
                                         <Input name="seedApprovedFName" value={editSeed.seedApprovedFName} placeholder="ชื่อ"
                                             onChange={handleInputChange} />
+                                        {error.seedApprovedFName && <Box as="span" textAlign="center" color="#E53E3E">{error.seedApprovedFName}</Box>}
                                     </Box>
                                     <Box>
                                         <Input name="seedApprovedLName" value={editSeed.seedApprovedLName} placeholder="นามสกุล"
                                             onChange={handleInputChange} />
+                                        {error.seedApprovedLName && <Box as="span" textAlign="center" color="#E53E3E">{error.seedApprovedLName}</Box>}
                                     </Box>
                                 </Flex>
                             </Flex>

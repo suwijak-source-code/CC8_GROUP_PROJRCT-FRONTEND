@@ -7,6 +7,7 @@ import axios from "../../../config/axios";
 const GardenerJobListComponent = ({ item }) => {
     const [error, setError] = useState({});
 
+    console.log(item + " " + "ttt");
     const handleConfirm = async () => {
         try {
             const res = await axios.patch(`/jobs/${item.id}`, {

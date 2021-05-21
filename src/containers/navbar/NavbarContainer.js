@@ -12,15 +12,24 @@ const NavbarContainer = () => {
   const role = useSelector((state) => state.authenticated.role);
 
   return (
-    <div className="nav-container">
-      <div className="nav-container-link-logo">
-        <div className="nav-logo">
-          <LogoComponent />
+    <div>
+      <div className="nav-container">
+        <div className="nav-container-link-logo">
+          <div className="nav-logo">
+            <LogoComponent />
+          </div>
+          <div className="nav-link">
+            <LinkMenuComponent />
+          </div>
         </div>
-        <div className="nav-link">
-          {role === "admin" && <LinkMenuComponent />}
-          {role !== "admin" && <></>}
+        <div className="nav-container-button">
+          {!isAuthenticated && <ButtonComponent />}
+          {isAuthenticated && <LoginSuccess />}
         </div>
+      </div>
+      <div className="nav-link">
+        {role === "admin" && <LinkMenuComponent />}
+        {role !== "admin" && <></>}
       </div>
       <div className="nav-container-button">
         {!isAuthenticated && <ButtonComponent />}

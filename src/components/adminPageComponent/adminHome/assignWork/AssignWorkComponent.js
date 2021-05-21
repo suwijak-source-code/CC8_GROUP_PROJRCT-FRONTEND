@@ -39,9 +39,9 @@ const AssignWorkComponent = ({ setOpenAssign }) => {
     const validateInput = () => {
         const newError = {};
         if (!assign.farmName) newError.farmName = 'กรุณาระบุชื่อสวน';
-        if (!assign.seedName) newError.farmApprovedFName = 'กรุณาระบุชื่อเมล็ดพันธุ์';
-        if (!assign.staffId) newError.farmApprovedLName = 'กรุณาระบุชื่อพนักงานที่รับผิดชอบ';
-        if (!assign.mission) newError.farmApprovedLName = 'กรุณาระบุงาน';
+        if (!assign.seedName) newError.seedName = 'กรุณาระบุชื่อเมล็ดพันธุ์';
+        if (!assign.staffId) newError.staffId = 'กรุณาระบุชื่อพนักงานที่รับผิดชอบ';
+        if (!assign.mission) newError.mission = 'กรุณาระบุงาน';
         setError(newError);
     };
 
@@ -106,6 +106,7 @@ const AssignWorkComponent = ({ setOpenAssign }) => {
                                 <Select name="staffId" onChange={handleInputChange} placeholder="กรุณาเลือกพนักงาน">
                                     {gardener.map((item, index) => <option key={index} value={item.id} >{item.firstName} {item.lastName}</option>)}
                                 </Select>
+                                {error.staffId && <Box as="span" textAlign="center" color="#E53E3E">{error.staffId}</Box>}
                             </Flex>
                         </FormControl>
                         <Box my="5">

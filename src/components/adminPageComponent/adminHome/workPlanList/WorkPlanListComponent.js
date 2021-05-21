@@ -85,8 +85,6 @@ const WorkPlanListComponent = ({ item, setOpenAssign, setOpenEdit, setOpenFinish
         };
     };
 
-    // console.log(item.id + " " + item.status + "test");
-    // console.log(assign);
     return (
 
         <Box>
