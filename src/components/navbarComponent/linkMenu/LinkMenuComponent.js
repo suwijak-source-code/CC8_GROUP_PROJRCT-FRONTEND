@@ -22,11 +22,15 @@ const LinkMenuComponent = () => {
           </BreadcrumbItem>
 
           <BreadcrumbItem>
+            <BreadcrumbLink href="/order">รายการขาย</BreadcrumbLink>
+          </BreadcrumbItem>
+
+          <BreadcrumbItem>
             <BreadcrumbLink href="/inventory">คลังสินค้า</BreadcrumbLink>
           </BreadcrumbItem>
 
           <BreadcrumbItem>
-            <BreadcrumbLink href="/order">รายการขาย</BreadcrumbLink>
+            <BreadcrumbLink href="/customer">ลูกค้า</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
       )}
@@ -41,7 +45,7 @@ const LinkMenuComponent = () => {
           </BreadcrumbItem>
 
           <BreadcrumbItem>
-            <BreadcrumbLink href="#">ลูกค้า</BreadcrumbLink>
+            <BreadcrumbLink href="/customer">ลูกค้า</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
       )}

@@ -159,6 +159,7 @@ const AddEmployeeComponent = () => {
       role: "",
       imgPath: "",
     });
+    setError({})
   };
 
   const handleCancel = (e) => {
@@ -342,6 +343,7 @@ const AddEmployeeComponent = () => {
                   <Box ml="4">
                     <Select
                       name="role"
+                      value={createEmployee.role}
                       onChange={handleInputChange}
                       placeholder="กรุณาเลือกตำแหน่ง"
                     >
