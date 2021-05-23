@@ -42,9 +42,6 @@ function OrderContainer() {
       <Flex align="center" direction="column">
         <Container maxW="container.md">
           <Flex>
-            <Button size="xs" mx={2}>
-              + เพิ่มลูกค้า
-            </Button>
             <Button
               size="xs"
               mx={2}
@@ -53,17 +50,6 @@ function OrderContainer() {
               }}
             >
               + รายการขาย
-            </Button>
-            <Button
-              size="xs"
-              variant="outline"
-              bg="muted.300"
-              mx={2}
-              onClick={() => {
-                history.push("/inventory");
-              }}
-            >
-              ไปหน้าสินค้า
             </Button>
           </Flex>
         </Container>

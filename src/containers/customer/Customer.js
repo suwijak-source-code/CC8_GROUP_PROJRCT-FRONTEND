@@ -54,6 +54,7 @@ function Customer() {
                     ชื่อ
                   </Text>
                 </Td>
+                <Td></Td>
                 <Td>
                   <Text as="h3" fontWeight="semibold">
                     เลขประจำตัวผู้เสียภาษี
@@ -103,6 +104,7 @@ function Customer() {
                     >
                       {customer.fullName}
                     </Td>
+                    <Td></Td>
                     <Td
                       onClick={() => history.push("/customer/" + customer.id)}
                     >
@@ -129,11 +131,14 @@ function Customer() {
                     >
                       {customer.Orders.reduce(
                         (sumOrder, order) =>
-                          (sumOrder += order.OrderItems.reduce(
-                            (sumItem, orderItem) =>
-                              (sumItem += orderItem.price * orderItem.quantity),
-                            0
-                          )),
+                          order.status === "waiting for payment"
+                            ? (sumOrder += order.OrderItems.reduce(
+                                (sumItem, orderItem) =>
+                                  (sumItem +=
+                                    orderItem.price * orderItem.quantity),
+                                0
+                              ))
+                            : sumOrder,
                         0
                       )}
                     </Td>
@@ -156,9 +161,8 @@ function Customer() {
                         <Td
                           borderTop="2px solid black"
                           borderLeft="2px solid black"
-                        >
-                          วันที่
-                        </Td>
+                        ></Td>
+                        <Td borderTop="2px solid black">วันที่</Td>
                         <Td borderTop="2px solid black">InvNo.</Td>
                         <Td borderTop="2px solid black">รวม</Td>
                         <Td
@@ -169,12 +173,24 @@ function Customer() {
                         </Td>
                       </Tr>
                       {customer.Orders.map((order, index) => (
-                        <Tr key={index}>
+                        <Tr
+                          key={index}
+                          _hover={{ cursor: "pointer", bg: "gray.200" }}
+                          onClick={() => history.push("/order/" + order.id)}
+                          color={
+                            order.status === "cancelled"
+                              ? "red"
+                              : order.status === "completed"
+                              ? "green"
+                              : ""
+                          }
+                        >
                           <Td></Td>
                           <Td></Td>
-                          <Td borderLeft="2px solid black">
-                            {order.date.slice(0, 10)}
+                          <Td isNumeric borderLeft="2px solid black">
+                            {customer.Orders.length - index}
                           </Td>
+                          <Td>{order.date.slice(0, 10)}</Td>
                           <Td>{order.invNo}</Td>
                           <Td>
                             {order.OrderItems.reduce(
@@ -190,6 +206,7 @@ function Customer() {
                         <Td></Td>
                         <Td></Td>
                         <Td borderTop="2px solid black" m={1}></Td>
+                        <Td borderTop="2px solid black"> </Td>
                         <Td borderTop="2px solid black"> </Td>
                         <Td borderTop="2px solid black"> </Td>
                         <Td borderTop="2px solid black"> </Td>

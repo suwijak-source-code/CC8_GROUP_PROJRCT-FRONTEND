@@ -48,7 +48,7 @@ function SinglePlantingPage() {
 
   const fetchPlanting = async () => {
     try {
-      const res = await axios.get("/plantings/" + params.id);
+      const res = await axios.get("/plantings/by-id/" + params.id);
       setPlanting(res.data.planting);
     } catch (err) {
       console.dir(err);
@@ -186,16 +186,18 @@ function SinglePlantingPage() {
           <Button size="sm" mr={2}>
             มอบหมายงาน
           </Button>
-          <Button
-            size="sm"
-            mr={2}
-            onClick={() => {
-              setModalSelector("harvest");
-              onOpen();
-            }}
-          >
-            เก็บเกี่ยว
-          </Button>
+          {planting.status !== "finished" && (
+            <Button
+              size="sm"
+              mr={2}
+              onClick={() => {
+                setModalSelector("harvest");
+                onOpen();
+              }}
+            >
+              เก็บเกี่ยว
+            </Button>
+          )}
           <Flex justify="center">
             <Grid templateColumns="repeat(7, 1fr)" gap={4} m={2} p={2}>
               <GridItem colSpan={1}>

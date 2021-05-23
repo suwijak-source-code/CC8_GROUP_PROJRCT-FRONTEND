@@ -1,13 +1,14 @@
 import { Container, Flex, Text } from "@chakra-ui/layout";
 import axios from "../../config/axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { Table, Tbody, Td, Tfoot, Thead, Tr } from "@chakra-ui/table";
 import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "../../features/Product/ProductsSlice";
 
 function InventoryMovement() {
   const params = useParams();
+  const history = useHistory();
   const [movement, setMovement] = useState([]);
   const [products, setProducts] = useState([]);
   const fetchProducts = async () => {
@@ -15,11 +16,6 @@ function InventoryMovement() {
     setProducts(res.data.products);
   };
   useEffect(() => {
-    // const fetchMovement = async () => {
-    //   const res = await axios.get("/orderitem/?productId=" + (params.id || ""));
-    //   setMovement(res.data.orderItems);
-    // };
-    // fetchMovement();
     fetchProducts();
   }, []);
   console.log(products);
@@ -48,8 +44,30 @@ function InventoryMovement() {
             <Tbody>
               {products.map((product, index) =>
                 product.ProductMovements.map((movement, index) =>
-                  !movement.Planting ? (
-                    <Tr>
+                  !movement.Planting &&
+                  movement.OrderItem.Order.status === "cancelled" ? (
+                    <Tr
+                      _hover={{ cursor: "pointer", bg: "gray.200" }}
+                      color="red"
+                      onClick={() => {
+                        history.push("/order/" + movement.OrderItem.Order.id);
+                      }}
+                    >
+                      <Td>{movement.OrderItem.Order.date.slice(0, 10)}</Td>
+                      <Td>{movement.OrderItem.Order.invNo}</Td>
+                      <Td>{product.name}</Td>
+                      <Td>{movement.OrderItem.Order.name}</Td>
+                      <Td isNumeric></Td>
+                      <Td isNumeric>ยกเลิก</Td>
+                      <Td isNumeric></Td>
+                    </Tr>
+                  ) : !movement.Planting ? (
+                    <Tr
+                      _hover={{ cursor: "pointer", bg: "gray.200" }}
+                      onClick={() => {
+                        history.push("/order/" + movement.OrderItem.Order.id);
+                      }}
+                    >
                       <Td>{movement.OrderItem.Order.date.slice(0, 10)}</Td>
                       <Td>{movement.OrderItem.Order.invNo}</Td>
                       <Td>{product.name}</Td>
@@ -61,7 +79,12 @@ function InventoryMovement() {
                       </Td>
                     </Tr>
                   ) : (
-                    <Tr>
+                    <Tr
+                      _hover={{ cursor: "pointer", bg: "gray.200" }}
+                      onClick={() => {
+                        history.push("/planting/" + movement.Planting.id);
+                      }}
+                    >
                       <Td>{movement.Planting.harvestDate.slice(0, 10)}</Td>
                       <Td>การปลูกที่ {movement.Planting.id}</Td>
                       <Td>{product.name}</Td>
@@ -105,7 +128,10 @@ function InventoryMovement() {
                   {products.reduce(
                     (total, { ProductMovements }) =>
                       (total += ProductMovements.reduce(
-                        (acc, { quantity }) => (acc += +quantity),
+                        (acc, { quantity, OrderItem }) =>
+                          OrderItem && OrderItem.Order.status === "cancelled"
+                            ? acc
+                            : (acc += +quantity),
                         0
                       )),
                     0
@@ -115,8 +141,10 @@ function InventoryMovement() {
                   {products.reduce(
                     (total, { ProductMovements }) =>
                       (total += ProductMovements.reduce(
-                        (acc, { price, quantity }) =>
-                          (acc += price * quantity * -1),
+                        (acc, { price, quantity, OrderItem }) =>
+                          OrderItem && OrderItem.Order.status === "cancelled"
+                            ? acc
+                            : (acc += price * quantity * -1),
                         0
                       )),
                     0
