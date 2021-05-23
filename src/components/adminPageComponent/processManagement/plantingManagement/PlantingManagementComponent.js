@@ -345,7 +345,7 @@ const PlantingManagementComponent = () => {
     return (
         <Box>
             <Box py="2.5">
-                <h1><b><u>จัดการแปลงปลูก</u></b></h1>
+                <h1><b><u>จัดการการปลูก</u></b></h1>
             </Box>
             <Flex py="2.5" flexFlow="row wrap" justifyContent="space-between" alignItems="center">
                 <Box mr="6">

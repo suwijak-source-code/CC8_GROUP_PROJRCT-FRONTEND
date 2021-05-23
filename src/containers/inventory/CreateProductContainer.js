@@ -20,7 +20,7 @@ function CreateProductContainer() {
   };
   useEffect(() => {
     if (products.length === 0) fetchProducts();
-  });
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
