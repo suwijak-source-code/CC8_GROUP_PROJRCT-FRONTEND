@@ -16,6 +16,9 @@ import {
   Td,
   TableCaption,
   Select,
+  FormControl,
+  FormLabel,
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "../../config/axios";
@@ -25,6 +28,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setOrders } from "../../features/Order/OrderListsSlice";
 
 function CreateOrderContainer() {
+  const toast = useToast();
   const [products, setProducts] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [customer, setCustomer] = useState("");
@@ -120,15 +124,24 @@ function CreateOrderContainer() {
     setItems(newItems);
     console.log(newItems[index]);
   };
+
   const handlePriceChange = (index, e) => {
     const newItems = [...items];
     newItems[index].price = e.target.value;
     setItems(newItems);
     console.log(newItems[index]);
   };
+
+  const handleDeleteItem = (index) => {
+    const newItems = [...items];
+    newItems.splice(index, 1);
+    setItems(newItems);
+  };
+
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
+      if (invNo === "" || isInvNoAlreadyUsed) return;
       const res = await axios.post("/order", {
         invNo,
         date,
@@ -139,6 +152,13 @@ function CreateOrderContainer() {
         orderItems: items,
       });
       history.push("/order/" + res.data.order.id);
+      toast({
+        title: "Invoice Created.",
+        description: "We've created invoice.",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
     } catch (err) {
       console.dir(err);
     }
@@ -174,18 +194,22 @@ function CreateOrderContainer() {
                 />
               </Box>
               <Box w="60%" p={2}>
-                <Text as="label" for="inv-no" fontSize="sm">
-                  เลขที่รายการขาย
-                </Text>
-                <Input
-                  id="inv-no"
-                  type="text"
-                  size="sm"
-                  placeholder="เลขที่รายการขาย"
-                  value={invNo}
-                  //   onChange={(e) => setInvNo(e.target.value)}
-                  onChange={handleInvNoChange}
-                />
+                <FormControl isRequired>
+                  <FormLabel fontSize="sm">
+                    เลขที่รายการขาย
+                    {/* <Text as="label" for="inv-no" fontSize="sm">
+                    </Text> */}
+                  </FormLabel>
+                  <Input
+                    id="inv-no"
+                    type="text"
+                    size="sm"
+                    placeholder="เลขที่รายการขาย"
+                    value={invNo}
+                    //   onChange={(e) => setInvNo(e.target.value)}
+                    onChange={handleInvNoChange}
+                  />
+                </FormControl>
                 {isInvNoAlreadyUsed && (
                   <Text fontSize="sm" color="red">
                     *เลขที่รายการขายซ้ำ
@@ -198,20 +222,22 @@ function CreateOrderContainer() {
               <Text as="label" for="customer" fontSize="sm">
                 ลูกค้า
               </Text>
-              <Select
-                size="sm"
-                mx={2}
-                defaultValue="เลือกลูกค้า"
-                onChange={handleSelectCustomer}
-                id="customer"
-              >
-                {customer === "" && <option value="">เลือกลูกค้า</option>}
-                {customers.map((customer, index) => (
-                  <option key={index} value={customer.id}>
-                    {customer.fullName}
-                  </option>
-                ))}
-              </Select>
+              <FormControl isRequired>
+                <Select
+                  size="sm"
+                  mx={2}
+                  defaultValue=""
+                  onChange={handleSelectCustomer}
+                  id="customer"
+                >
+                  {customer === "" && <option value="">เลือกลูกค้า</option>}
+                  {customers.map((customer, index) => (
+                    <option key={index} value={customer.id}>
+                      {customer.fullName}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
             </Flex>
             <Flex mx={2} mb={1} pr="20%" align="baseline">
               <Box w="9">
@@ -257,6 +283,7 @@ function CreateOrderContainer() {
                       <Th isNumeric>จำนวน</Th>
                       <Th isNumeric>ราคาต่อหน่วย</Th>
                       <Th isNumeric>รวม</Th>
+                      <Th></Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -284,6 +311,16 @@ function CreateOrderContainer() {
                           />
                         </Td>
                         <Td isNumeric>{item.quantity * item.price}</Td>
+                        <Td p={0} m={0}>
+                          <Text
+                            as="u"
+                            color="red"
+                            _hover={{ cursor: "pointer" }}
+                            onClick={() => handleDeleteItem(index)}
+                          >
+                            ลบ
+                          </Text>
+                        </Td>
                       </Tr>
                     ))}
                   </Tbody>

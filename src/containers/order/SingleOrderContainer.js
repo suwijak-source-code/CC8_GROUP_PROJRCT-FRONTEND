@@ -11,6 +11,9 @@ import {
   Thead,
   Button,
   Input,
+  useToast,
+  Img,
+  Image,
 } from "@chakra-ui/react";
 
 function SingleOrderContainer() {
@@ -19,6 +22,7 @@ function SingleOrderContainer() {
   const [order, setOrder] = useState({ OrderItems: [] });
   const [email, setEmail] = useState("");
   const invoiceItem = document.getElementById("invoiceItem");
+  const toast = useToast();
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -81,7 +85,7 @@ function SingleOrderContainer() {
   const handleSendInvoice = async () => {
     try {
       console.log(invoiceItem.outerHTML);
-      await axios.post("/order/email", {
+      const res = await axios.post("/order/email", {
         email,
         header: "<h2>ใบกำกับภาษี</h2>",
         invoiceDetail: `
@@ -94,6 +98,14 @@ function SingleOrderContainer() {
         <p>${order.address.split("\n")[3]}</p>`,
         invoiceItem: invoiceItem.outerHTML,
       });
+      if (res.data.message === "invoice sent")
+        toast({
+          title: "Invoice Sent.",
+          description: "We've sent invoice to " + email + ".",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
     } catch (err) {
       console.dir(err);
     }
@@ -126,8 +138,8 @@ function SingleOrderContainer() {
         <Container
           id="invoice"
           maxW="container.md"
-          // minH="500"
           border="1px solid black"
+          py={3}
         >
           <Flex>
             {order.address && (
@@ -142,6 +154,7 @@ function SingleOrderContainer() {
             )}
             <Spacer />
             <Flex direction="column" fontSize="sm" w="40%">
+              <Img w="50%" src="/img/head.png" />
               <Text>ใบกำกับภาษี</Text>
               <Text>เลขที่: {order.invNo}</Text>
               <Text>วันที่: {order.date && order.date.slice(0, 10)}</Text>
@@ -206,19 +219,20 @@ function SingleOrderContainer() {
             </Container>
           </Flex>
         </Container>
-        <Flex justify="center" align="baseline">
-          <Text as="label" for="email" m={1}>
-            Email:
-          </Text>
-          <Input
-            size="sm"
-            w="50%"
-            id="email"
-            m={1}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></Input>
-        </Flex>
+        {order.status === "waiting for payment" && (
+          <Flex justify="center" align="baseline">
+            <Text as="label" for="email" m={1}>
+              Email:
+            </Text>
+            <Input
+              size="sm"
+              id="email"
+              m={1}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            ></Input>
+          </Flex>
+        )}
         <Flex justify="center">
           {order.status === "completed" && (
             <Text as="h2" color="green" fontWeight="semibold">

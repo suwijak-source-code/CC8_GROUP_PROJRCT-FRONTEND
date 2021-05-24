@@ -90,6 +90,13 @@ function OrderContainer() {
                     justify="center"
                     flex="1"
                     onClick={() => history.push("/order/" + item.id)}
+                    color={
+                      item.status === "cancelled"
+                        ? "red"
+                        : item.status === "completed"
+                        ? "green"
+                        : ""
+                    }
                   >
                     <Text mr={3} fontSize="sm">
                       {item.invNo}
