@@ -1,4 +1,5 @@
-import FooterComponent from "../../components/footer/FooterComponent"
+import FooterComponent from "../../components/footerComponent/FooterComponent";
+import { Box } from "@chakra-ui/react";
 
 
 
@@ -6,9 +7,9 @@ import FooterComponent from "../../components/footer/FooterComponent"
 
 const FooterContainer = () => {
     return (
-        <div>
+        <Box my="5">
             <FooterComponent />
-        </div>
+        </Box>
     )
 }
 
